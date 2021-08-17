@@ -1,9 +1,19 @@
+# Setup heatmap workspace container
+
 version: '3'
 services:
-  workspace:
-    image: perrygeo/gdal-base    
+  heatmap:
+    container_name: heatmap
+    image: seasketch/heatmap:1.0.0
+    build:
+      context: .             # use dockerfile
+      target: workspace
+    #working_dir: /work      #comment out for build.target:prod
+    #entrypoint: /bin/sh     #comment out for build.target:prod
+    #stdin_open: true        #comment out for build.target:prod
+    #tty: true               #comment out for build.target:prod
     volumes:
-      - $HOME/.aws/credentials:/root/.aws/credentials:ro
-      - ./:/heatmap
-    working_dir: /heatmap/bin
+    - ./:/work
+    ports:
+      - 5678:5678
     command: ["bash"]

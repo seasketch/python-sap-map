@@ -1,15 +1,24 @@
 
-=== Installing in Docker
-
-* Install and start Docker
-
+=== Install
 ```
 git clone https://github.com/seasketch/heatmap.git
 cd heatmap
-docker-compose run --rm workspace
-python -m pip install numpy
-python -m pip install --no-binary fiona rasterio shapely
 ```
+
+=== Start 
+
+* Install and start Docker
+```
+docker-compose build debug
+docker-compose run --rm --service-ports heatmap
+```
+
+
+=== Debug using VSCode from within container
+```
+python -m debugpy --listen 0.0.0.0:5678 --wait-for-client lib/hello.py
+```
+* In VSCode, set a breakpoint, Click `Debug` in the left menu, then click `Python Attach` to attach to the waiting process and start it running.
 
 === Installing in OSX
 
