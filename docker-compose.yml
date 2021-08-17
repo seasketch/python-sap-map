@@ -1,0 +1,9 @@
+version: '3'
+services:
+  workspace:
+    image: perrygeo/gdal-base    
+    volumes:
+      - $HOME/.aws/credentials:/root/.aws/credentials:ro
+      - ./:/heatmap
+    working_dir: /heatmap/bin
+    command: ["bash"]
