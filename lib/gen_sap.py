@@ -34,6 +34,14 @@ runs = [
 def calcSap(geometry, importance, cellSize, maxArea = None, maxSap = None):
   """Calculates the SAP value given geometry and its importance
 
+  Each respondent has a total SAP of 100, and each shape is assigned a portion of that 100
+  The SAP for a shape is calculated as (Importance / Area) where Area is relative to planning unit size
+  Once all shapes are summed, a cell with a SAP of 10 for example, represents a tenth of a respondent
+
+  Variations:
+  * SAP = ((Crew * Importance) / Area) - multiplying the importance by a factor of crew size.  Could also be landing data, etc.
+  * Weighted SAP = SAP * Weighting(W) - upscaling a sample to represent an entire group.  W = (total estimated / total sampled)
+
   Args:
     geometry: geometry in 3857 (unit of meters)
     importance: importance of geometry (1-100)
@@ -42,13 +50,6 @@ def calcSap(geometry, importance, cellSize, maxArea = None, maxSap = None):
     maxSap: limits the priority of shapes. Gives shapes with high priority an artificially lower one, decreasing their presence in heatmap
   """
   from shapely.geometry import shape
-  # Each respondent has a SAP of 100, each shape is assigned a portion of that
-  # SAP = importance / area
-  # Once all respondents are summed, a cell with a SAP of 10 represents a tenth of a respondent
-
-  # Variations (weighting)
-  # Multiplying the importance by a factor of crew size, landing data, etc.
-  # Multiplying the SAP by a scale factor to represent an entire group with a smaller sample (upscale)
 
   shape = shape(geometry)
   areaPerCell = (cellSize * cellSize) # area of single raster cell
@@ -108,15 +109,16 @@ def genSap(run):
   height = math.ceil((dst_maxy - dst_miny) / config.cellSize)
   width = math.ceil((dst_maxx - dst_minx) / config.cellSize)
 
+  # Generate list of tuples, each consisting of geometry in Web Mercator and its importance.  This is the input shape expected by rasterize
   shapes = [(geometry, calcSap(geometry, feature['properties'][config.importanceField], config.cellSize, config.maxArea, config.maxSap)) for feature in src_geometries for geometry in feature_to_mercator(feature)]
 
-  # Create transform from the shapes coordinate space to image coordinate space
-  affineTransform = from_bounds(*bounds, width, height)
+  # Create transform from raster geographic coordinate space to image pixel coordinate space
+  geoToPixel = from_bounds(*bounds, width, height)
 
   result = rasterize(
       shapes,
       out_shape=(height, width),
-      transform=affineTransform,
+      transform=geoToPixel,
       merge_alg=MergeAlg.add,
       fill=0
   )
@@ -130,7 +132,7 @@ def genSap(run):
     count=1,
     dtype='float32',
     crs=dst_crs,
-    transform=affineTransform,
+    transform=geoToPixel,
   ) as out:
     out.write(result, indexes=1)
 
