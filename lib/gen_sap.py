@@ -9,6 +9,7 @@ from rasterio.enums import MergeAlg
 import rasterio.shutil
 import fiona
 from rasterio.warp import transform
+from featureToMercator import feature_to_mercator
 
 # TODO: support user-defined filter
 # TODO: support geojson
@@ -65,31 +66,6 @@ def calcSap(geometry, importance, cellSize, maxArea = None, maxSap = None):
   
   return sap
 
-def feature_to_mercator(feature):
-  """Normalize feature and converts coords to 3857.
-
-  Args:
-    feature: geojson feature to convert to mercator geometry.
-  """
-  # Ref: https://gist.github.com/dnomadb/5cbc116aacc352c7126e779c29ab7abe
-
-  src_crs = CRS.from_epsg(4326)
-  dst_crs = CRS.from_epsg(3857)
-
-  geometry = feature["geometry"]
-  if geometry["type"] == "Polygon":
-      xys = (zip(*part) for part in geometry["coordinates"])
-      xys = (list(zip(*transform(src_crs, dst_crs, *xy))) for xy in xys)
-
-      yield {"coordinates": list(xys), "type": "Polygon"}
-
-  elif geometry["type"] == "MultiPolygon":
-      for component in geometry["coordinates"]:
-          xys = (zip(*part) for part in component)
-          xys = (list(zip(*transform(src_crs, dst_crs, *xy))) for xy in xys)
-
-          yield {"coordinates": list(xys), "type": "Polygon"}
-
 def genSap(run):
   """Generates Spatial Access Priority (SAP) raster given run configuration
   """
@@ -136,5 +112,6 @@ def genSap(run):
   ) as out:
     out.write(result, indexes=1)
 
+# Main
 for run in runs:
   genSap(run)
