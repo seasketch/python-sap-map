@@ -6,6 +6,7 @@ RUN mkdir /work/
 WORKDIR /work/
 
 COPY requirements.txt /work/requirements.txt
+COPY requirements_dev.txt /work/requirements_dev.txt
 RUN pip install -r requirements.txt
 
 RUN python -m pip install cython numpy -c requirements.txt
@@ -17,6 +18,9 @@ RUN pip uninstall cython --yes
 FROM base as workspace
 RUN pip install -r requirements_dev.txt
 WORKDIR /work
+
+# Install sapmap module to site-packages using symlink, making it available to run tests
+RUN pip install -e ./
 
 # ------ Production image
 
