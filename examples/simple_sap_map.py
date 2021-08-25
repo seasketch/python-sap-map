@@ -1,4 +1,4 @@
-from sapmap import genSap, RunConfig
+from sapmap import genSapMap
 import os.path
 
 runs = [
@@ -7,7 +7,4 @@ runs = [
 ]
 
 for run in runs:
-    config = RunConfig(run)
-    assert(os.path.isfile(config.infile))
-    genSap(config)
-    assert(os.path.isfile(config.outfile))
+  genSapMap(**run)

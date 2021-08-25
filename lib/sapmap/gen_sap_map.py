@@ -1,5 +1,3 @@
-"""$ python gen_heatmap input.shp output.tif"""
-
 import math
 import rasterio
 from rasterio.features import rasterize
@@ -10,12 +8,6 @@ import rasterio.shutil
 import fiona
 from rasterio.warp import transform
 from featureToMercator import feature_to_mercator
-
-# TODO: support user-defined filter
-# TODO: support geojson
-# TODO: support user provided raster with planning units
-# TODO: handle other preprocessing done elsewhere
-# TODO: output logfile
 
 def calcSap(geometry, importance, cellSize, maxArea = None, maxSap = None):
   """Calculates the SAP value given geometry and its importance
@@ -51,13 +43,20 @@ def calcSap(geometry, importance, cellSize, maxArea = None, maxSap = None):
   
   return sap
 
-def genSap(config):
+def genSapMap(
+  infile,
+  outfile,
+  cellSize=100,
+  importanceField='weight',
+  maxArea=None,
+  maxSap=None
+):
   """Generates Spatial Access Priority (SAP) raster given run configuration
   """
   src_crs = CRS.from_epsg(4326)
   dst_crs = CRS.from_epsg(3857)
 
-  src_geometries = fiona.open(config.infile)
+  src_geometries = fiona.open(infile)
 
   # Alternative is to use study region or user supplied bounds
   minx, miny, maxx, maxy = src_geometries.bounds
@@ -66,11 +65,11 @@ def genSap(config):
   bounds = [dst_minx, dst_miny, dst_maxx, dst_maxy]
   
   # TODO: this doesn't align with 100m cell size, need to calc new max
-  height = math.ceil((dst_maxy - dst_miny) / config.cellSize)
-  width = math.ceil((dst_maxx - dst_minx) / config.cellSize)
+  height = math.ceil((dst_maxy - dst_miny) / cellSize)
+  width = math.ceil((dst_maxx - dst_minx) / cellSize)
 
   # Generate list of tuples, each consisting of geometry in Web Mercator and its importance.  This is the input shape expected by rasterize
-  shapes = [(geometry, calcSap(geometry, feature['properties'][config.importanceField], config.cellSize, config.maxArea, config.maxSap)) for feature in src_geometries for geometry in feature_to_mercator(feature)]
+  shapes = [(geometry, calcSap(geometry, feature['properties'][importanceField], cellSize, maxArea, maxSap)) for feature in src_geometries for geometry in feature_to_mercator(feature)]
 
   # Create transform from raster geographic coordinate space to image pixel coordinate space
   geoToPixel = from_bounds(*bounds, width, height)
@@ -84,7 +83,7 @@ def genSap(config):
   )
 
   with rasterio.open(
-    config.outfile,
+    outfile,
     'w',
     driver='GTiff',
     height=height,

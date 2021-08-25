@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-from .gen_sap import genSap, calcSap
-from .runConfig import RunConfig
+from .gen_sap_map import genSapMap, calcSap
 
 __all__ = [
-  'genSap',
-  'calcSap',
-  RunConfig
+  'genSapMap',
+  'calcSap'
 ]
