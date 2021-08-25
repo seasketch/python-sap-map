@@ -12,13 +12,11 @@ RUN python -m pip install cython numpy -c requirements.txt
 RUN python -m pip install --no-binary fiona,rasterio,shapely -r requirements.txt
 RUN pip uninstall cython --yes
 
-# ------ Workspace image
+# ------ Workspace image - for local use
 
 FROM base as workspace
-
-RUN pip install debugpy
+RUN pip install -r requirements_dev.txt
 WORKDIR /work
-# CMD python -m debugpy --listen 0.0.0.0:5678 --wait-for-client lib/hello.py
 
 # ------ Production image
 

@@ -15,22 +15,7 @@ from featureToMercator import feature_to_mercator
 # TODO: support geojson
 # TODO: support user provided raster with planning units
 # TODO: handle other preprocessing done elsewhere
-
-class RunConfig(object):
-    cellSize = 100
-    infile = './input.shp'
-    outfile = './output.tif'
-    importanceField = 'weight'
-    maxArea = None
-    maxSap = None
-
-    def __init__(self, dictionary):
-        self.__dict__.update(dictionary)
-
-runs = [
-  {'infile': "data/passive_rec.shp", 'outfile': './outputPure.tif'},
-  {'infile': "data/passive_rec.shp", 'outfile': './outputConstrained.tif', 'maxArea': 10000, 'maxSap': 500}
-]
+# TODO: output logfile
 
 def calcSap(geometry, importance, cellSize, maxArea = None, maxSap = None):
   """Calculates the SAP value given geometry and its importance
@@ -66,10 +51,9 @@ def calcSap(geometry, importance, cellSize, maxArea = None, maxSap = None):
   
   return sap
 
-def genSap(run):
+def genSap(config):
   """Generates Spatial Access Priority (SAP) raster given run configuration
   """
-  config = RunConfig(run)
   src_crs = CRS.from_epsg(4326)
   dst_crs = CRS.from_epsg(3857)
 
@@ -111,7 +95,3 @@ def genSap(run):
     transform=geoToPixel,
   ) as out:
     out.write(result, indexes=1)
-
-# Main
-for run in runs:
-  genSap(run)
