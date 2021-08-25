@@ -43,36 +43,50 @@ def calcSap(geometry, importance, cellSize, maxArea = None, maxSap = None):
   
   return sap
 
+
 def genSapMap(
   infile,
   outfile,
-  cellSize=100,
   importanceField='weight',
+  outCrs='epsg:3857',
+  cellSize=100,
+  boundsPrecision=0,
   maxArea=None,
   maxSap=None
 ):
   """Generates Spatial Access Priority (SAP) raster given run configuration
+
+  infile: path+filename of vector dataset containing features, format must be supported by fiona/gdal
+  outfile: path+filename of output raster geotiff
+  importanceField: name of vector attribute containing importance value used for SAP calculation
+  outCrs: the epsg code for the output raster coordinate system
+  cellSize: size of cells in units of output coordinate system
+  boundsPrecision: number of digits to round bound coordinates to
   """
-  src_crs = CRS.from_epsg(4326)
-  dst_crs = CRS.from_epsg(3857)
+  dst_crs = CRS.from_string(outCrs)
 
-  src_geometries = fiona.open(infile)
+  src_shapes = fiona.open(infile)
 
-  # Alternative is to use study region or user supplied bounds
-  minx, miny, maxx, maxy = src_geometries.bounds
-
-  [[dst_minx, dst_maxx], [dst_miny, dst_maxy]] = transform(src_crs, dst_crs, [minx, maxx], [miny, maxy])
-  bounds = [dst_minx, dst_miny, dst_maxx, dst_maxy]
+  # Start with src bounds and reproject and round if needed
+  src_w, src_s, src_e, src_n = src_shapes.bounds
   
-  # TODO: this doesn't align with 100m cell size, need to calc new max
-  height = math.ceil((dst_maxy - dst_miny) / cellSize)
-  width = math.ceil((dst_maxx - dst_minx) / cellSize)
+  if (src_shapes.crs['init'] != outCrs):
+    [[src_w, src_e], [src_s, src_n]] = transform(src_shapes.crs, dst_crs, [src_w, src_e], [src_s, src_n])
+  if boundsPrecision > 0:
+    src_w, src_s, src_e, src_n = (round(v, boundsPrecision)
+      for v in (src_w, src_s, src_e, src_n))
+
+  # Get height and width of dst raster in pixels. Round up to next whole number to ensure coverage
+  height = math.ceil((src_n - src_s) / cellSize)
+  width = math.ceil((src_e - src_w) / cellSize)
+
+  dstBounds = [src_w, src_n - (cellSize * height), src_w + (cellSize * width), src_n]
 
   # Generate list of tuples, each consisting of geometry in Web Mercator and its importance.  This is the input shape expected by rasterize
-  shapes = [(geometry, calcSap(geometry, feature['properties'][importanceField], cellSize, maxArea, maxSap)) for feature in src_geometries for geometry in feature_to_mercator(feature)]
+  shapes = [(geometry, calcSap(geometry, feature['properties'][importanceField], cellSize, maxArea, maxSap)) for feature in src_shapes for geometry in feature_to_mercator(feature)]
 
   # Create transform from raster geographic coordinate space to image pixel coordinate space
-  geoToPixel = from_bounds(*bounds, width, height)
+  geoToPixel = from_bounds(*dstBounds, width, height)
 
   result = rasterize(
       shapes,

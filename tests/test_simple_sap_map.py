@@ -9,5 +9,8 @@ def test_simple_sap_map():
     raster = os.path.join(OUTPUT, 'simple-polygon.tif')
 
     assert(os.path.isfile(shapes))
-    genSapMap(shapes, raster)
+    genSapMap(shapes, raster, boundsPrecision=6)
     assert(os.path.isfile(raster))
+
+if __name__ == "__main__":
+    test_simple_sap_map()
