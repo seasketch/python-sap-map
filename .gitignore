@@ -13,5 +13,7 @@ MANIFEST
 .idea
 .eggs
 .cache
+
 tests/output/*
 !tests/output/README.md
+examples/*.tif
