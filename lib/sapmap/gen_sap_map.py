@@ -13,8 +13,7 @@ def calcSap(geometry, importance, cellSize, maxArea = None, maxSap = None):
   """Calculates the SAP value given geometry and its importance
 
   Each respondent has a total SAP of 100, and each shape is assigned a portion of that 100
-  The SAP for a shape is calculated as (Importance / Area) where Area is relative to planning unit size
-  Once all shapes are summed, a cell with a SAP of 10 for example, represents a tenth of a respondent
+  The SAP for a shape is calculated as (Importance / Area)
 
   Variations:
   * SAP = ((Crew * Importance) / Area) - multiplying the importance by a factor of crew size.  Could also be landing data, etc.
@@ -30,8 +29,18 @@ def calcSap(geometry, importance, cellSize, maxArea = None, maxSap = None):
   from shapely.geometry import shape
 
   shape = shape(geometry)
-  areaPerCell = (cellSize * cellSize) # area of single raster cell
-  area = shape.area / areaPerCell # shape area, in units of area per cell, which also yields the total number of cells
+  
+  """
+  The SAP value (Importance / Area) can be interpreted as "importance per area unit".
+  We want to scale the area to a unit of area that makes sense.  By default it will be that
+  of the coordinate system, for Web Mercator that is 1m^2.
+  
+  We want to scale it to the area of one raster cell.  That way if a shape has a
+  SAP of 10, then we can say it represents a tenth of a respondent per cell,
+  because each respondent has a total SAP of 100.
+  """
+  areaPerCell = (cellSize * cellSize)
+  area = shape.area / areaPerCell
   
   if (maxArea):
     area = min(area, maxArea)
