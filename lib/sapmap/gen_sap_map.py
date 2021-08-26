@@ -8,13 +8,16 @@ import rasterio.shutil
 import fiona
 from rasterio.warp import transform
 from featureToMercator import feature_to_mercator
+from shapely.geometry import shape
 
 def calcSap(geometry, importance, cellSize, maxArea = None, maxSap = None):
   """Calculates the SAP value given geometry and its importance
 
   Each respondent has a total SAP of 100, and each shape is assigned a portion of that 100
-  The SAP for a shape is calculated as (Importance / Area)
-
+  The SAP for a shape is calculated as (Importance / Area), which can be
+  interpreted as "importance per area unit". By default the unit of area of the
+  shape is that of the coordinate system used, for Web Mercator that is 1 square meter.
+  
   Variations:
   * SAP = ((Crew * Importance) / Area) - multiplying the importance by a factor of crew size.  Could also be landing data, etc.
   * Weighted SAP = SAP * Weighting(W) - upscaling a sample to represent an entire group.  W = (total estimated / total sampled)
@@ -26,21 +29,18 @@ def calcSap(geometry, importance, cellSize, maxArea = None, maxSap = None):
     maxArea: limits the area of a shape.  Gives shapes with high area an artifically lower one, increasing their SAP relative to others, increasing their presence in heatmap
     maxSap: limits the priority of shapes. Gives shapes with high priority an artificially lower one, decreasing their presence in heatmap
   """
-  from shapely.geometry import shape
-
-  shape = shape(geometry)
   
-  """
-  The SAP value (Importance / Area) can be interpreted as "importance per area unit".
-  We want to scale the area to a unit of area that makes sense.  By default it will be that
-  of the coordinate system, for Web Mercator that is 1m^2.
-  
-  We want to scale it to the area of one raster cell.  That way if a shape has a
-  SAP of 10, then we can say it represents a tenth of a respondent per cell,
-  because each respondent has a total SAP of 100.
-  """
+  shapeGeom = shape(geometry)
   areaPerCell = (cellSize * cellSize)
-  area = shape.area / areaPerCell
+  
+  """
+  Scale from the spatial unit of the coordinate system to one raster cell.
+  
+  By doint that, it makes the SAP value more understandable. If a shape then
+  has a SAP of 10, we can say it represents a tenth of a respondent per
+  raster cell, because each respondent has a total SAP of 100.
+  """
+  area = shapeGeom.area / areaPerCell
   
   if (maxArea):
     area = min(area, maxArea)
