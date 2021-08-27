@@ -1,4 +1,6 @@
-fiona == 1.8.20
-numpy == 1.21.2
-rasterio == 1.2.6
-shapely == 1.7.1
+affine<3.0
+shapely
+numpy>=1.9
+rasterio>=1.0
+cligj>=0.4
+fiona
