@@ -10,42 +10,33 @@ from rasterio.warp import transform
 from featureToMercator import feature_to_mercator
 from shapely.geometry import shape
 
-def calcSap(geometry, importance, cellSize, maxArea = None, maxSap = None):
-  """Calculates the SAP value given geometry and its importance
+def calcSap(geometry, importance=1, areaFactor=1, importanceFactor=1, maxArea=None, maxSap=None):
+  """Calculates the SAP value given geometry, its importance, the area per cell, and an optional importanceFactor
 
-  Each respondent has a total SAP of 100, and each shape is assigned a portion of that 100
-  The SAP for a shape is calculated as (Importance / Area), which can be
-  interpreted as "importance per area unit". By default the unit of area of the
-  shape is that of the coordinate system used, for Web Mercator that is 1 square meter.
+  Each respondent has a total SAP of 100, and each shape is assigned a portion
+  of that 100 The SAP for a shape is calculated as (Importance / Area), which
+  can be interpreted as "importance per area unit".  The area of the shape is
+  calculated in the coordinate system used, for Web Mercator that yields
+  square meters.  Use the areaFactor option to change this.
   
-  Variations:
-  * SAP = ((Crew * Importance) / Area) - multiplying the importance by a factor of crew size.  Could also be landing data, etc.
-  * Weighted SAP = SAP * Weighting(W) - upscaling a sample to represent an entire group.  W = (total estimated / total sampled)
+  Use the optional importanceFactor to accommodate additional variable as described below
 
   Args:
     geometry: geometry in 3857 (unit of meters)
     importance: importance of geometry (1-100)
-    cellSize: the length of each cell side
+    areaFactor: factor to change the area by dividing. For example if area of geometry is calculated in square meters, an areaFactor of 1,000,000 will make the SAP per square km. because 1 sq. km = 1000m x 1000m = 1mil sq. meters
+    importanceFactor: numeric value to multiply the importance by.  Use to scale the SAP from being 'per respondent' to a larger group of livelihoods or even economic values 
     maxArea: limits the area of a shape.  Gives shapes with high area an artifically lower one, increasing their SAP relative to others, increasing their presence in heatmap
     maxSap: limits the priority of shapes. Gives shapes with high priority an artificially lower one, decreasing their presence in heatmap
   """
   
   shapeGeom = shape(geometry)
-  areaPerCell = (cellSize * cellSize)
-  
-  """
-  Scale from the spatial unit of the coordinate system to one raster cell.
-  
-  By doint that, it makes the SAP value more understandable. If a shape then
-  has a SAP of 10, we can say it represents a tenth of a respondent per
-  raster cell, because each respondent has a total SAP of 100.
-  """
-  area = shapeGeom.area / areaPerCell
+  area = shapeGeom.area / areaFactor
   
   if (maxArea):
     area = min(area, maxArea)
 
-  sap = importance / area
+  sap = importanceFactor * importance / area
 
   if (maxSap):
     sap = min(sap, maxSap)
@@ -56,7 +47,8 @@ def calcSap(geometry, importance, cellSize, maxArea = None, maxSap = None):
 def genSapMap(
   infile,
   outfile,
-  importanceField='weight',
+  importanceField=None,
+  importanceFactorField=None,
   outCrs='epsg:3857',
   cellSize=100,
   boundsPrecision=0,
@@ -68,6 +60,7 @@ def genSapMap(
   infile: path+filename of vector dataset containing features, format must be supported by fiona/gdal
   outfile: path+filename of output raster geotiff
   importanceField: name of vector attribute containing importance value used for SAP calculation
+  importanceFactorField: name of vector attribute containing importanceFactor value for importance
   outCrs: the epsg code for the output raster coordinate system
   cellSize: size of cells in units of output coordinate system
   boundsPrecision: number of digits to round bound coordinates to
@@ -90,9 +83,20 @@ def genSapMap(
   width = math.ceil((src_e - src_w) / cellSize)
 
   dstBounds = [src_w, src_n - (cellSize * height), src_w + (cellSize * width), src_n]
+  areaPerCell = (cellSize * cellSize)
 
-  # Generate list of tuples, each consisting of geometry in Web Mercator and its importance.  This is the input shape expected by rasterize
-  shapes = [(geometry, calcSap(geometry, feature['properties'][importanceField], cellSize, maxArea, maxSap)) for feature in src_shapes for geometry in feature_to_mercator(feature)]
+  # Transform shapes to a list of tuples, each consisting of (geometry in Web Mercator CRS, importance).  This is the input shape expected by rasterize
+  shapes = [(
+    geometry,
+    calcSap(
+      geometry,
+      feature['properties'][importanceField] if importanceField else 1,
+      areaPerCell,
+      feature['properties'][importanceFactorField] if importanceFactorField else 1,
+      maxArea,
+      maxSap
+    )
+  ) for feature in src_shapes for geometry in feature_to_mercator(feature)]
 
   # Create transform from raster geographic coordinate space to image pixel coordinate space
   geoToPixel = from_bounds(*dstBounds, width, height)
