@@ -1,16 +1,17 @@
 from rasterio.crs import CRS
 from rasterio.warp import transform
 
-def feature_to_mercator(feature):
-  """Normalize feature and converts coords to 3857.
+def reprojectPolygonFeature(feature, outCrs='epsg:3857'):
+  """Reproject Polygon/MultiPolygon to a different coordinate system.
 
   Args:
     feature: geojson feature to convert to mercator geometry.
+    outCrs: coordinate system to reproject to, as epsg string.  Defaults to 'epsg:3857'
   """
   # Ref: https://gist.github.com/dnomadb/5cbc116aacc352c7126e779c29ab7abe
 
   src_crs = CRS.from_epsg(4326)
-  dst_crs = CRS.from_epsg(3857)
+  dst_crs = CRS.from_string(outCrs)
 
   geometry = feature["geometry"]
   if geometry["type"] == "Polygon":
