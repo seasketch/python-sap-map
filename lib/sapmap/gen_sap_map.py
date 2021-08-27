@@ -91,7 +91,7 @@ def genSapMap(
       shapeGeom = shape(geometry)
       if not shapeGeom.is_valid:
 
-        # TODO: test invalid shapes
+        # TODO: test invalid shapes and if a useful fix is made
 
         if fixGeom:
           fixedGeom = shapeGeom.buffer(0)
@@ -102,8 +102,8 @@ def genSapMap(
           print(geometry)
           raise Exception("Invalid geometry found, use fixGeom=True if you want an automated fix to be attempted")
 
-      # TODO: check for missing importanceField if provided
-      # TODO: check for missing importanceFactorField if provided
+      # TODO: check for missing importanceField if provided and raise
+      # TODO: check for missing importanceFactorField if provided and raise
 
       shapes.append((
         geometry,
