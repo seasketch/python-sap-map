@@ -1,6 +1,6 @@
 import math
 import rasterio
-from rasterio.features import rasterize
+from rasterio.features import bounds, rasterize
 from rasterio.transform import from_bounds
 from rasterio.crs import CRS
 from rasterio.enums import MergeAlg
@@ -9,6 +9,9 @@ import fiona
 from rasterio.warp import transform
 from reprojectFeature import reprojectPolygonFeature
 from shapely.geometry import shape
+import simplejson
+import time
+import datetime
 
 def calcSap(geometry, importance=1, areaFactor=1, importanceFactor=1, maxArea=None, maxSap=None):
   """Calculates the SAP value given geometry, its importance, the area per cell, and an optional importanceFactor
@@ -46,31 +49,57 @@ def calcSap(geometry, importance=1, areaFactor=1, importanceFactor=1, maxArea=No
 def genSapMap(
   infile,
   outfile,
+  logfile=None,
+  manifestfile=None,
   importanceField=None,
   importanceFactorField=None,
+  uniqueIdField=None,
   outCrs='epsg:3857',
   cellSize=1000,
   boundsPrecision=0,
-  fixGeom=False,
   maxArea=None,
   maxSap=None
 ):
-  """Generates Spatial Access Priority (SAP) raster map given run configuration
+  """Generates Spatial Access Priority (SAP) raster map given run configuration and returns manifest
 
   infile: path+filename of vector dataset containing features, format must be supported by fiona/gdal
   outfile: path+filename of output raster geotiff
+  logfile: path+filename of output logfile
+  manifestfile: path+filename of output manifest
   importanceField: name of vector attribute containing importance value used for SAP calculation
   importanceFactorField: name of vector attribute containing importanceFactor value for importance
+  uniqueIdField: field containing a unique Id for feature to use for logging the list of features included in the raster for verification.  Must not allow person to be re-identified
   outCrs: the epsg code for the output raster coordinate system, defaults to epsg:3857 aka Web Mercator
   cellSize: length/width of planning unit in units of output coordinate system, defaults to 1000 (1000m = 1km)
   boundsPrecision: number of digits to round the coordinates of bound calculation to. useful if don't snap to numbers as expected
   fixGeom: if an invalid geometry is found, if fixGeom is True it attempts to fix using buffer(0), otherwise it fails.  Review the log to make sure the automated fix was acceptable
   """
+  startTime = time.perf_counter()
   dst_crs = CRS.from_string(outCrs)
   src_shapes = fiona.open(infile)
 
+  manifest = {
+    'timestamp': datetime.datetime.now().astimezone().isoformat(),
+    'params': {
+      'infile': infile,
+      'outfile': outfile,
+      'logfile': logfile,
+      'manifestfile': manifestfile,
+      'importanceField': importanceField,
+      'importanceFactorField': importanceFactorField,
+      'uniqueIdField': uniqueIdField,
+      'outCrs': outCrs,
+      'cellSize': cellSize,
+      'boundsPrecision': boundsPrecision,
+    },
+    'included': [],
+    'excluded': []
+  }
+  log = []
+
   # Start with src bounds and reproject and round if needed
-  src_w, src_s, src_e, src_n = src_shapes.bounds
+  inBounds = src_shapes.bounds
+  src_w, src_s, src_e, src_n = inBounds
   if (src_shapes.crs['init'] != outCrs):
     [[src_w, src_e], [src_s, src_n]] = transform(src_shapes.crs, dst_crs, [src_w, src_e], [src_s, src_n])
   if boundsPrecision > 0:
@@ -81,44 +110,55 @@ def genSapMap(
   height = math.ceil((src_n - src_s) / cellSize)
   width = math.ceil((src_e - src_w) / cellSize)
 
-  dstBounds = [src_w, src_n - (cellSize * height), src_w + (cellSize * width), src_n]
+  outBounds = [src_w, src_n - (cellSize * height), src_w + (cellSize * width), src_n]
   areaPerCell = (cellSize * cellSize)
 
-  # Transform shapes to a list of tuples, each consisting of (geometry in Web Mercator CRS, importance).  This is the input shape expected by rasterize
+  manifest['height'] = height
+  manifest['width'] = width
+  manifest['inBounds'] = inBounds
+  manifest['outBounds'] = outBounds
+
+  # Generate a list of tuples, each consisting of the geometry and importance, as expected by rasterize
   shapes = []
-  for feature in src_shapes:
-      geometry = feature['geometry'] if src_shapes.crs['init'] == outCrs else reprojectPolygonFeature(feature)      
+  for idx, feature in enumerate(src_shapes):
+      geometry = feature['geometry'] if src_shapes.crs['init'] == outCrs else next(reprojectPolygonFeature(feature))
       shapeGeom = shape(geometry)
+      error = False
       if not shapeGeom.is_valid:
+        error = "Geometry is invalid" 
+      elif shapeGeom.area == 0:
+        error = "Area of geometry is zero" 
+      elif len(geometry['coordinates'][0]) == 0:
+        error = "Geometry has no coordinates"
+      else:
+        # TODO: clip geometry to clipping region
 
-        # TODO: test invalid shapes and if a useful fix is made
-
-        if fixGeom:
-          fixedGeom = shapeGeom.buffer(0)
-          print("Fixed geometry")
-          print(fixedGeom)
-          shapeGeom = fixedGeom
+        shapes.append((
+          geometry,
+          calcSap(
+            shapeGeom,
+            feature['properties'][importanceField] if importanceField else 1,
+            areaPerCell,
+            feature['properties'][importanceFactorField] if importanceFactorField else 1,
+            maxArea,
+            maxSap
+          )
+        ))
+        if uniqueIdField:
+          manifest['included'].append(feature['properties'][uniqueIdField])
         else:
-          print(geometry)
-          raise Exception("Invalid geometry found, use fixGeom=True if you want an automated fix to be attempted")
+          manifest['included'].append(idx)
 
-      # TODO: check for missing importanceField if provided and raise
-      # TODO: check for missing importanceFactorField if provided and raise
-
-      shapes.append((
-        geometry,
-        calcSap(
-          shapeGeom,
-          feature['properties'][importanceField] if importanceField else 1,
-          areaPerCell,
-          feature['properties'][importanceFactorField] if importanceFactorField else 1,
-          maxArea,
-          maxSap
-        )
-      ))
+      if error and len(error) > 0:
+        log.append("Skipping feature: {}".format(error))
+        log.append(simplejson.dumps(feature))
+        if uniqueIdField:
+          manifest['excluded'].append(feature['properties'][uniqueIdField])
+        else:
+          manifest['excluded'].append(idx)
 
   # Create transform from raster geographic coordinate space to image pixel coordinate space
-  geoToPixel = from_bounds(*dstBounds, width, height)
+  geoToPixel = from_bounds(*outBounds, width, height)
 
   result = rasterize(
       shapes,
@@ -140,3 +180,39 @@ def genSapMap(
     transform=geoToPixel,
   ) as out:
     out.write(result, indexes=1)
+  
+  manifest['includedCount'] = len(manifest['included'])
+  manifest['excludedCount'] = len(manifest['excluded'])
+  manifest['executionTime'] = round(time.perf_counter() - startTime, 2)
+
+  print('Created SAP raster {} in {}s'.format(outfile, manifest['executionTime']))
+
+  print(' {} features burned in'.format(manifest['includedCount']))
+  if manifest['excludedCount'] > 0:
+    print(' {} features excluded, see logfile for details'.format(manifest['excludedCount']))
+  print('')
+
+  if manifestfile:
+    with open(manifestfile, 'w') as manifestFile:
+      simplejson.dump(manifest, manifestFile, indent=2)
+  else:
+      print('Manifest:')
+      print(simplejson.dumps(manifest, indent=2))
+      print('')
+
+  if logfile:
+    with open(logfile, 'w') as logFile:
+      for item in log:
+          logFile.write("%s\n" % item)
+  elif len(log) > 0:
+      print('Log:')
+      for item in log:
+        print(item)
+      print('')
+  print('')
+
+  return manifest
+  
+
+
+  
