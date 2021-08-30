@@ -1,17 +1,16 @@
 import math
 import rasterio
 from rasterio.features import bounds, rasterize
-from rasterio.transform import from_bounds
-from rasterio.crs import CRS
 from rasterio.enums import MergeAlg
 import rasterio.shutil
 import fiona
-from rasterio.warp import transform
 from reprojectFeature import reprojectPolygonFeature
 from shapely.geometry import shape
 import simplejson
 import time
 import datetime
+from sapmap.calc_raster_props import calcRasterProps
+from rasterio.crs import CRS
 
 def calcSap(geometry, importance=1, areaFactor=1, importanceFactor=1, maxArea=None, maxSap=None):
   """Calculates the SAP value given geometry, its importance, the area per cell, and an optional importanceFactor
@@ -54,7 +53,7 @@ def genSapMap(
   importanceField=None,
   importanceFactorField=None,
   uniqueIdField=None,
-  outCrs='epsg:3857',
+  outCrsString='epsg:3857',
   cellSize=1000,
   boundsPrecision=0,
   maxArea=None,
@@ -69,14 +68,14 @@ def genSapMap(
   importanceField: name of vector attribute containing importance value used for SAP calculation
   importanceFactorField: name of vector attribute containing importanceFactor value for importance
   uniqueIdField: field containing a unique Id for feature to use for logging the list of features included in the raster for verification.  Must not allow person to be re-identified
-  outCrs: the epsg code for the output raster coordinate system, defaults to epsg:3857 aka Web Mercator
+  outCrsString: the epsg code for the output raster coordinate system, defaults to epsg:3857 aka Web Mercator
   cellSize: length/width of planning unit in units of output coordinate system, defaults to 1000 (1000m = 1km)
   boundsPrecision: number of digits to round the coordinates of bound calculation to. useful if don't snap to numbers as expected
   fixGeom: if an invalid geometry is found, if fixGeom is True it attempts to fix using buffer(0), otherwise it fails.  Review the log to make sure the automated fix was acceptable
   """
   startTime = time.perf_counter()
-  dst_crs = CRS.from_string(outCrs)
   src_shapes = fiona.open(infile)
+  outCrs = CRS.from_string(outCrsString)
 
   manifest = {
     'timestamp': datetime.datetime.now().astimezone().isoformat(),
@@ -88,7 +87,7 @@ def genSapMap(
       'importanceField': importanceField,
       'importanceFactorField': importanceFactorField,
       'uniqueIdField': uniqueIdField,
-      'outCrs': outCrs,
+      'outCrsString': outCrsString,
       'cellSize': cellSize,
       'boundsPrecision': boundsPrecision,
     },
@@ -97,20 +96,9 @@ def genSapMap(
   }
   log = []
 
-  # Start with src bounds and reproject and round if needed
   inBounds = src_shapes.bounds
-  src_w, src_s, src_e, src_n = inBounds
-  if (src_shapes.crs['init'] != outCrs):
-    [[src_w, src_e], [src_s, src_n]] = transform(src_shapes.crs, dst_crs, [src_w, src_e], [src_s, src_n])
-  if boundsPrecision > 0:
-    src_w, src_s, src_e, src_n = (round(v, boundsPrecision)
-      for v in (src_w, src_s, src_e, src_n))
-
-  # Get height and width of dst raster in pixels. Round up to next whole number to ensure coverage
-  height = math.ceil((src_n - src_s) / cellSize)
-  width = math.ceil((src_e - src_w) / cellSize)
-
-  outBounds = [src_w, src_n - (cellSize * height), src_w + (cellSize * width), src_n]
+  (outBounds, width, height, outTransform) = calcRasterProps(src_shapes.bounds, src_shapes.crs, outCrsString, cellSize, boundsPrecision)
+  
   areaPerCell = (cellSize * cellSize)
 
   manifest['height'] = height
@@ -121,7 +109,7 @@ def genSapMap(
   # Generate a list of tuples, each consisting of the geometry and importance, as expected by rasterize
   shapes = []
   for idx, feature in enumerate(src_shapes):
-      geometry = feature['geometry'] if src_shapes.crs['init'] == outCrs else next(reprojectPolygonFeature(feature))
+      geometry = feature['geometry'] if src_shapes.crs['init'] == outCrsString else next(reprojectPolygonFeature(feature))
       shapeGeom = shape(geometry)
       error = False
       if not shapeGeom.is_valid:
@@ -131,8 +119,6 @@ def genSapMap(
       elif len(geometry['coordinates'][0]) == 0:
         error = "Geometry has no coordinates"
       else:
-        # TODO: clip geometry to clipping region
-
         shapes.append((
           geometry,
           calcSap(
@@ -157,13 +143,10 @@ def genSapMap(
         else:
           manifest['excluded'].append(idx)
 
-  # Create transform from raster geographic coordinate space to image pixel coordinate space
-  geoToPixel = from_bounds(*outBounds, width, height)
-
   result = rasterize(
       shapes,
       out_shape=(height, width),
-      transform=geoToPixel,
+      transform=outTransform,
       merge_alg=MergeAlg.add,
       fill=0
   )
@@ -175,9 +158,10 @@ def genSapMap(
     height=height,
     width=width,
     count=1,
+    nodata=0,
     dtype='float32',
-    crs=dst_crs,
-    transform=geoToPixel,
+    crs=outCrs,
+    transform=outTransform,
   ) as out:
     out.write(result, indexes=1)
   
