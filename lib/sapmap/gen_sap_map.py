@@ -56,6 +56,7 @@ def genSapMap(
   outCrsString='epsg:3857',
   cellSize=1000,
   boundsPrecision=0,
+  fixGeom=False,
   maxArea=None,
   maxSap=None
 ):
@@ -92,7 +93,8 @@ def genSapMap(
       'boundsPrecision': boundsPrecision,
     },
     'included': [],
-    'excluded': []
+    'excluded': [],
+    'fixed': []
   }
   log = []
 
@@ -113,12 +115,31 @@ def genSapMap(
       shapeGeom = shape(geometry)
       error = False
       if not shapeGeom.is_valid:
-        error = "Geometry is invalid" 
+        if fixGeom:
+          fixedGeom = shapeGeom.buffer(0)
+          if fixedGeom.is_valid and fixedGeom.area > 0:
+            log.append("Fixed invalid feature geometry")
+            log.append(simplejson.dumps(feature))
+            log.append("With new geometry")
+            newGeom = next(reprojectPolygonFeature(fixedGeom.__geo_interface__, "epsg:3857", "epsg:4326"))
+            log.append(simplejson.dumps({
+              **feature,
+              'geometry': newGeom
+            }))
+            log.append("")     
+            shapeGeom = fixedGeom
+            if uniqueIdField:
+              manifest['fixed'].append(feature['properties'][uniqueIdField])
+            else:
+              manifest['fixed'].append(idx)
+          else:
+            error = "Geometry is invalid or area is 0, attempted fix failed" 
       elif shapeGeom.area == 0:
         error = "Area of geometry is zero" 
       elif len(geometry['coordinates'][0]) == 0:
         error = "Geometry has no coordinates"
-      else:
+
+      if not error:
         shapes.append((
           geometry,
           calcSap(
@@ -134,10 +155,10 @@ def genSapMap(
           manifest['included'].append(feature['properties'][uniqueIdField])
         else:
           manifest['included'].append(idx)
-
-      if error and len(error) > 0:
+      elif len(error) > 0:
         log.append("Skipping feature: {}".format(error))
         log.append(simplejson.dumps(feature))
+        log.append("")
         if uniqueIdField:
           manifest['excluded'].append(feature['properties'][uniqueIdField])
         else:

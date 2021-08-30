@@ -21,7 +21,8 @@ for infile in input:
         "logfile": "output/{}.log.txt".format(infile.split('.')[0]),
         "manifestfile": "output/{}.manifest.json".format(infile.split('.')[0]),
         "cellSize": 100,
-        "uniqueIdField": "id"
+        "uniqueIdField": "id",
+        "fixGeom": True
     })
 
 for run in runs:
