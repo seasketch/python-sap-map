@@ -4,7 +4,7 @@ from rasterio.features import bounds, rasterize
 from rasterio.enums import MergeAlg
 import rasterio.shutil
 import fiona
-from reprojectFeature import reprojectPolygonFeature
+from reprojectFeature import reprojectPolygon
 from shapely.geometry import shape
 import simplejson
 import time
@@ -111,7 +111,7 @@ def genSapMap(
   # Generate a list of tuples, each consisting of the geometry and importance, as expected by rasterize
   shapes = []
   for idx, feature in enumerate(src_shapes):
-      geometry = feature['geometry'] if src_shapes.crs['init'] == outCrsString else next(reprojectPolygonFeature(feature))
+      geometry = feature['geometry'] if src_shapes.crs['init'] == outCrsString else next(reprojectPolygon(feature))
       shapeGeom = shape(geometry)
       error = False
       if not shapeGeom.is_valid:
@@ -121,7 +121,7 @@ def genSapMap(
             log.append("Fixed invalid feature geometry")
             log.append(simplejson.dumps(feature))
             log.append("With new geometry")
-            newGeom = next(reprojectPolygonFeature(fixedGeom.__geo_interface__, "epsg:3857", "epsg:4326"))
+            newGeom = next(reprojectPolygon(fixedGeom.__geo_interface__, "epsg:3857", "epsg:4326"))
             log.append(simplejson.dumps({
               **feature,
               'geometry': newGeom
