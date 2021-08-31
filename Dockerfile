@@ -7,6 +7,7 @@ WORKDIR /work/
 
 COPY requirements.txt /work/requirements.txt
 COPY requirements_dev.txt /work/requirements_dev.txt
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 RUN python -m pip install cython numpy -c requirements.txt
@@ -19,12 +20,9 @@ FROM base as workspace
 RUN pip install -r requirements_dev.txt
 WORKDIR /work
 
-# Install sapmap module to site-packages using symlink, making it available to run tests
-RUN pip install -e ./
-
 # ------ Production image
 
-FROM python:3.8-slim-buster as production
+FROM python:3.9.6-slim-buster as production
 
 # Install the previously-built shared libaries from the base image
 COPY --from=base /usr/local /usr/local
