@@ -19,3 +19,4 @@ tests/output/*
 examples/*.tif
 examples/project/input
 examples/project/output
+examples/**/*.tif
