@@ -23,12 +23,18 @@ Install and start Docker, then build and start a sapmap Docker image:
     # Run test suite:
     pytest
 
-Debug using VSCode from within container:
+Debug examples and tests within VSCode.  debupy starts in container listening on port, waits for vscode
 ::
 
-    python -m debugpy --listen 0.0.0.0:5678 --wait-for-client examples/simple_sap_map.py
+    cd examples/simple
+    python -m debugpy --listen 0.0.0.0:5678 --wait-for-client simple_sap_map.py
 
-In VSCode, set a breakpoint, Click `Debug` in the left menu, then click `Python Attach` to attach to the waiting process and start it running.
+    or
+
+    cd tests
+    python -m debugpy --listen 0.0.0.0:5678 --wait-for-client test_simple_sap_map.py
+
+In VSCode, set a breakpoint, Click `Debug` in the left menu, then click `Python Attach`.  It will attach to the debugpy port and then execute the script
 
 Install and run in OSX
 ----------------------
