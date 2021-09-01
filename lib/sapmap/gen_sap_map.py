@@ -22,7 +22,8 @@ def genSapMap(
   importanceFactorField=None,
   uniqueIdField=None,
   outCrsString='epsg:3857',
-  cellSize=1000,
+  outResolution=1000,
+  bounds=None,
   boundsPrecision=0,
   fixGeom=False,
   maxArea=None,
@@ -38,7 +39,8 @@ def genSapMap(
   importanceFactorField: name of vector attribute containing importanceFactor value for importance
   uniqueIdField: field containing a unique Id for feature to use for logging the list of features included in the raster for verification.  Must not allow person to be re-identified
   outCrsString: the epsg code for the output raster coordinate system, defaults to epsg:3857 aka Web Mercator
-  cellSize: length/width of planning unit in units of output coordinate system, defaults to 1000 (1000m = 1km)
+  outResolution: length/width of planning unit in units of output coordinate system, defaults to 1000 (1000m = 1km)
+  bounds: bounds to use for output raster, as [w, s, e, n] in CRS of infile.  Output raster will align to the top left, but will extend past the bottom right as needed to the next multiple of outResolution
   boundsPrecision: number of digits to round the coordinates of bound calculation to. useful if don't snap to numbers as expected
   fixGeom: if an invalid geometry is found, if fixGeom is True it attempts to fix using buffer(0), otherwise it fails.  Review the log to make sure the automated fix was acceptable
   """
@@ -57,7 +59,8 @@ def genSapMap(
       'importanceFactorField': importanceFactorField,
       'uniqueIdField': uniqueIdField,
       'outCrsString': outCrsString,
-      'cellSize': cellSize,
+      'outResolution': outResolution,
+      'bounds': bounds,
       'boundsPrecision': boundsPrecision,
     },
     'included': [],
@@ -66,10 +69,9 @@ def genSapMap(
   }
   log = []
 
-  inBounds = src_shapes.bounds
-  (outBounds, width, height, outTransform) = calcRasterProps(src_shapes.bounds, src_shapes.crs, outCrsString, cellSize, boundsPrecision)
-  
-  areaPerCell = (cellSize * cellSize)
+  inBounds = bounds if bounds else src_shapes.bounds
+  (outBounds, width, height, outTransform) = calcRasterProps(inBounds, src_shapes.crs, outCrsString, outResolution, boundsPrecision)
+  areaPerCell = (outResolution * outResolution)
 
   manifest['height'] = height
   manifest['width'] = width
@@ -99,7 +101,7 @@ def genSapMap(
             if uniqueIdField:
               manifest['fixed'].append(feature['properties'][uniqueIdField])
             else:
-              manifest['fixed'].append(idx)
+              manifest['fixed'].append(idx + 1)
           else:
             error = "Geometry is invalid or area is 0, attempted fix failed" 
       elif shapeGeom.area == 0:

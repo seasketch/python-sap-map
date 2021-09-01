@@ -10,7 +10,7 @@ def test_simple_sap_map():
     raster = os.path.join(OUTPUT, 'simple-polygon.tif')
 
     assert(os.path.isfile(shapes))
-    manifest = genSapMap(shapes, raster, cellSize=100)
+    manifest = genSapMap(shapes, raster, outResolution=100)
     assert(os.path.isfile(raster))
     assert(len(manifest['included']) == 5)
 
@@ -22,7 +22,7 @@ def test_simple_sap_map():
         
         assert(manifest['height'] == reader.height == 4)
         assert(manifest['width'] == reader.width == 4)
-        assert(manifest['params']['cellSize'] == reader.res[0] == reader.res[1])
+        assert(manifest['params']['outResolution'] == reader.res[0] == reader.res[1])
         assert(reader.nodata == 0.0)
 
         arr = reader.read()
@@ -38,5 +38,6 @@ def test_simple_sap_map():
                 # TODO: see if this can be extended out to 6 decimal places
                 assert(cell == checkArr[rowId][colId]) # Should be equal within 2 decimal places        
 
+# Used for debugging
 if __name__ == "__main__":
     test_simple_sap_map()

@@ -3,7 +3,7 @@ from rasterio.warp import transform
 from rasterio.transform import from_bounds
 from rasterio.crs import CRS
 
-def calcRasterProps(inBounds, inCrs, outCrsString, cellSize, boundsPrecision=0):  
+def calcRasterProps(inBounds, inCrs, outCrsString, resolution, boundsPrecision=0):  
   # Start with inBounds and reproject and round if needed
   src_w, src_s, src_e, src_n = inBounds
 
@@ -15,10 +15,10 @@ def calcRasterProps(inBounds, inCrs, outCrsString, cellSize, boundsPrecision=0):
       for v in (src_w, src_s, src_e, src_n))
 
   # Get height and width of dst raster in pixels. Round up to next whole number to ensure coverage
-  height = math.ceil((src_n - src_s) / cellSize)
-  width = math.ceil((src_e - src_w) / cellSize)
+  height = math.ceil((src_n - src_s) / resolution)
+  width = math.ceil((src_e - src_w) / resolution)
 
-  outBounds = [src_w, src_n - (cellSize * height), src_w + (cellSize * width), src_n]
+  outBounds = [src_w, src_n - (resolution * height), src_w + (resolution * width), src_n]
 
   # Create transform from raster geographic coordinate space to image pixel coordinate space
   geoToPixel = from_bounds(*outBounds, width, height)
