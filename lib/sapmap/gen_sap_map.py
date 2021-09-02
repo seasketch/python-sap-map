@@ -5,7 +5,7 @@ from rasterio.enums import MergeAlg
 import rasterio.shutil
 import fiona
 from reprojectFeature import reprojectPolygon
-from shapely.geometry import shape
+from shapely.geometry import shape, box
 import simplejson
 import time
 import datetime
@@ -74,6 +74,11 @@ def genSapMap(
   inBounds = bounds if bounds else src_shapes.bounds
   (outBounds, width, height, outTransform) = calcRasterProps(inBounds, src_shapes.crs, outCrsString, outResolution, boundsPrecision)
   areaPerCell = (outResolution * outResolution)
+
+  outPoly = box(*outBounds)
+  shapePoly = box(*src_shapes.bounds)
+  if not outPoly.intersects(shapePoly):
+    log.append('No shapes are within the raster bounds, it will be blank')
 
   manifest['height'] = height
   manifest['width'] = width
