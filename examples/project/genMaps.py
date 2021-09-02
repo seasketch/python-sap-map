@@ -26,7 +26,8 @@ for infile in input:
         "outResolution": 100,
         "bounds": eez_bounds,
         "uniqueIdField": "id",
-        "fixGeom": True
+        "fixGeom": False,
+        "allTouched": False
     })
 
 startTime = time.perf_counter()

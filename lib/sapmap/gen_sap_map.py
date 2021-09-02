@@ -25,6 +25,7 @@ def genSapMap(
   outResolution=1000,
   bounds=None,
   boundsPrecision=0,
+  allTouched=False,
   fixGeom=False,
   maxArea=None,
   maxSap=None
@@ -42,6 +43,7 @@ def genSapMap(
   outResolution: length/width of planning unit in units of output coordinate system, defaults to 1000 (1000m = 1km)
   bounds: bounds to use for output raster, as [w, s, e, n] in CRS of infile.  Output raster will align to the top left, but will extend past the bottom right as needed to the next multiple of outResolution
   boundsPrecision: number of digits to round the coordinates of bound calculation to. useful if don't snap to numbers as expected
+  allTouched: (boolean) Include a pixel in the mask if it touches any of the shapes. If False (default), include a pixel only if its center is within one of the shapes, or if it is selected by Bresenham’s line algorithm.
   fixGeom: if an invalid geometry is found, if fixGeom is True it attempts to fix using buffer(0), otherwise it fails.  Review the log to make sure the automated fix was acceptable
   """
   startTime = time.perf_counter()
@@ -139,7 +141,8 @@ def genSapMap(
       out_shape=(height, width),
       transform=outTransform,
       merge_alg=MergeAlg.add,
-      fill=0
+      fill=0,
+      all_touched=allTouched
   )
 
   with rasterio.open(

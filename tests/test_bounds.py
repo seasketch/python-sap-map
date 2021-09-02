@@ -1,6 +1,7 @@
 from sapmap import genSapMap
 import os.path
 import rasterio
+import numpy as np
 
 def test_outer_bounds():
     """ Test bounds larger than the input features
@@ -31,7 +32,7 @@ def test_outer_bounds():
         # Extent is that of simple-polygon.shp with additional 200 meters on each side
         # Hand verified values, should be same as simple with two additional cells of zeroes around it
         # view simple-polygon.tif in qgis using the tests/base/testdata.qgz project to verify
-        checkArr = [
+        checkArr = np.array([[
             [0, 0, 0,   0,   0,    0, 0, 0],
             [0, 0, 0,   0,   0,    0, 0, 0],
             [0, 0, 1,   0.5, 0,    0, 0, 0],
@@ -40,11 +41,9 @@ def test_outer_bounds():
             [0, 0, 0,   0,   0.25, 0.25, 0, 0],
             [0, 0, 0,   0,   0,    0, 0, 0],
             [0, 0, 0,   0,   0,    0, 0, 0]
-        ]
-        for rowId, row in enumerate(checkArr):
-            for colId, cell in enumerate(row):
-                # TODO: see if this can be extended out to 6 decimal places
-                assert(cell == checkArr[rowId][colId]) # Should be equal within 2 decimal places
+        ]], dtype=np.float32)
+        np.testing.assert_array_equal(arr, checkArr)
+
 
 def test_inner_bounds():
     """ Test bounds larger than the input features
@@ -60,7 +59,7 @@ def test_inner_bounds():
     assert(os.path.isfile(raster))
     assert(len(manifest['included']) == 5)
 
-    with rasterio.open(os.path.join(OUTPUT, 'simple-polygon.tif')) as reader:
+    with rasterio.open(raster) as reader:
         assert(manifest['outBounds'][0] == reader.bounds.left)
         assert(manifest['outBounds'][1] == reader.bounds.bottom)
         assert(manifest['outBounds'][2] == reader.bounds.right)
@@ -75,14 +74,12 @@ def test_inner_bounds():
         # Extent is that of simple-polygon.shp with additional 200 meters on each side
         # Hand verified values, should be same as simple with two additional cells of zeroes around it
         # view simple-polygon.tif in qgis using the tests/base/testdata.qgz project to verify
-        checkArr = [
+        checkArr = np.array([[
             [0,   0.5],
             [0.5, 1.25],
-        ]
-        for rowId, row in enumerate(checkArr):
-            for colId, cell in enumerate(row):
-                # TODO: see if this can be extended out to 6 decimal places
-                assert(cell == checkArr[rowId][colId]) # Should be equal within 2 decimal places        
+        ]], dtype=np.float32)
+
+        np.testing.assert_array_equal(arr, checkArr)
 
 # Used for debugging
 if __name__ == "__main__":
