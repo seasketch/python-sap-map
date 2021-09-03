@@ -23,10 +23,11 @@ for infile in input:
         "outfile": "output/{}.tif".format(infile.split('.')[0]),
         "logfile": "output/{}.log.txt".format(infile.split('.')[0]),
         "manifestfile": "output/{}.manifest.json".format(infile.split('.')[0]),
+        "errorfile": "output/{}.error.geojson".format(infile.split('.')[0]),
         "outResolution": 100,
         "bounds": eez_bounds,
         "uniqueIdField": "id",
-        "fixGeom": False,
+        "fixGeom": True,
         "allTouched": False
     })
 

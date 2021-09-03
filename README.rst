@@ -14,6 +14,9 @@ Install and start Docker, then build and start a sapmap Docker image:
     git clone https://github.com/seasketch/python-sap-map.git
     cd python-sap-map
     
+    # Build the docker container
+    docker-compose build sapmap
+    
     # Start the docker container, attach the source code, and open a shell session inside as root user
     docker-compose run --rm --service-ports sapmap
     
@@ -96,6 +99,9 @@ deactivate the virtual Python environment when done, activate again when needed,
 
     deactivate
 
+Create a new project
+--------------------
 
-
-
+* cp -r examples/project examples/myprojectname
+* mkdir examples/myprojectname/input
+* mkdir examples/myprojectname/output

@@ -18,6 +18,7 @@ def genSapMap(
   outfile,
   logfile=None,
   manifestfile=None,
+  errorfile=None,
   importanceField=None,
   importanceFactorField=None,
   uniqueIdField=None,
@@ -36,6 +37,7 @@ def genSapMap(
   outfile: path+filename of output raster geotiff
   logfile: path+filename of output logfile
   manifestfile: path+filename of output manifest
+  errorfile: path+filename.geojson of shapes that are invalid.  This must be specified for file to be generated
   importanceField: name of vector attribute containing importance value used for SAP calculation
   importanceFactorField: name of vector attribute containing importanceFactor value for importance
   uniqueIdField: field containing a unique Id for feature to use for logging the list of features included in the raster for verification.  Must not allow person to be re-identified
@@ -49,6 +51,7 @@ def genSapMap(
   startTime = time.perf_counter()
   src_shapes = fiona.open(infile)
   outCrs = CRS.from_string(outCrsString)
+  error_shapes = []
 
   manifest = {
     'timestamp': datetime.datetime.now().astimezone().isoformat(),
@@ -74,11 +77,6 @@ def genSapMap(
   inBounds = bounds if bounds else src_shapes.bounds
   (outBounds, width, height, outTransform) = calcRasterProps(inBounds, src_shapes.crs, outCrsString, outResolution, boundsPrecision)
   areaPerCell = (outResolution * outResolution)
-
-  outPoly = box(*outBounds)
-  shapePoly = box(*src_shapes.bounds)
-  if not outPoly.intersects(shapePoly):
-    log.append('No shapes are within the raster bounds, it will be blank')
 
   manifest['height'] = height
   manifest['width'] = width
@@ -111,6 +109,10 @@ def genSapMap(
               manifest['fixed'].append(idx + 1)
           else:
             error = "Geometry is invalid or area is 0, attempted fix failed" 
+            error_shapes.append(feature)
+        else:
+            error = "Geometry is invalid"
+            error_shapes.append(feature)
       elif shapeGeom.area == 0:
         error = "Area of geometry is zero" 
       elif len(geometry['coordinates'][0]) == 0:
@@ -193,6 +195,13 @@ def genSapMap(
         print(item)
       print('')
   print('')
+
+  if errorfile and len(error_shapes) > 0:
+    with open(errorfile, 'w') as errorFile:
+      errorFile.write(simplejson.dumps({
+        "type": "FeatureCollection",
+        "features": error_shapes
+      }))
 
   return manifest
   
