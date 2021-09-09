@@ -3,22 +3,19 @@ import os.path
 import rasterio
 import numpy as np
 
+DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 resolution = 100
 pixelArea = (resolution * resolution)
+infile = os.path.join(DATA, 'simple-polygon.geojson')
+outfile = os.path.join(DATA, 'simple-polygon.tif')
 
 def test_simple_sap_map():
-    INPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "input")
-    OUTPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
-
-    shapes = os.path.join(INPUT, 'simple-polygon.geojson')
-    raster = os.path.join(OUTPUT, 'simple-polygon.tif')
-
-    assert(os.path.isfile(shapes))
-    manifest = genSapMap(shapes, raster, outResolution=resolution, areaFactor=pixelArea)
-    assert(os.path.isfile(raster))
+    assert(os.path.isfile(infile))
+    manifest = genSapMap(infile, outResolution=resolution, areaFactor=pixelArea)
+    assert(os.path.isfile(outfile))
     assert(len(manifest['included']) == 5)
 
-    with rasterio.open(raster) as reader:
+    with rasterio.open(outfile) as reader:
         assert(manifest['outBounds'][0] == reader.bounds.left)
         assert(manifest['outBounds'][1] == reader.bounds.bottom)
         assert(manifest['outBounds'][2] == reader.bounds.right)
@@ -42,18 +39,12 @@ def test_simple_sap_map():
 def test_importance_sap_map():
     """Includes importanceField
     """
-    INPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "input")
-    OUTPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
-
-    shapes = os.path.join(INPUT, 'simple-polygon.geojson')
-    raster = os.path.join(OUTPUT, 'simple-polygon.tif')
-
-    assert(os.path.isfile(shapes))
-    manifest = genSapMap(shapes, raster, outResolution=resolution, areaFactor=pixelArea, importanceField='importance')
-    assert(os.path.isfile(raster))
+    assert(os.path.isfile(infile))
+    manifest = genSapMap(infile, outResolution=resolution, areaFactor=pixelArea, importanceField='importance')
+    assert(os.path.isfile(outfile))
     assert(len(manifest['included']) == 5)
 
-    with rasterio.open(raster) as reader:
+    with rasterio.open(outfile) as reader:
         assert(manifest['outBounds'][0] == reader.bounds.left)
         assert(manifest['outBounds'][1] == reader.bounds.bottom)
         assert(manifest['outBounds'][2] == reader.bounds.right)
@@ -77,4 +68,4 @@ def test_importance_sap_map():
 # Used for debugging
 if __name__ == "__main__":
     test_simple_sap_map()
-    test_importance_sap_map()
+    # test_importance_sap_map()

@@ -3,28 +3,25 @@ import os.path
 import rasterio
 import numpy as np
 
+DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 resolution = 100
 pixelArea = resolution * resolution
 
 def test_off_center():
-    INPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "input")
-    OUTPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
+    infile = os.path.join(DATA, 'off-center-polygon.geojson')
+    outfile = os.path.join(DATA, 'off-center-polygon.tif')
 
-    shapes = os.path.join(INPUT, 'off-center-polygon.geojson')
-    raster = os.path.join(OUTPUT, 'off-center-polygon.tif')
-
-    assert(os.path.isfile(shapes))
+    assert(os.path.isfile(infile))
     manifest = genSapMap(
-        shapes,
-        raster,
+        infile,
         outResolution=resolution,
         bounds=[-100, -100, 100, 100],
         areaFactor=pixelArea
     )
-    assert(os.path.isfile(raster))
+    assert(os.path.isfile(outfile))
     assert(len(manifest['included']) == 1)
 
-    with rasterio.open(raster) as reader:
+    with rasterio.open(outfile) as reader:
         assert(manifest['outBounds'][0] == reader.bounds.left)
         assert(manifest['outBounds'][1] == reader.bounds.bottom)
         assert(manifest['outBounds'][2] == reader.bounds.right)
@@ -40,25 +37,21 @@ def test_off_center():
         assert(np.all((arr == 0)))
 
 def test_all_touched():
-    INPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "input")
-    OUTPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
+    infile = os.path.join(DATA, 'off-center-polygon.geojson')
+    outfile = os.path.join(DATA, 'off-center-polygon.tif')
 
-    shapes = os.path.join(INPUT, 'off-center-polygon.geojson')
-    raster = os.path.join(OUTPUT, 'off-center-polygon.tif')
-
-    assert(os.path.isfile(shapes))
+    assert(os.path.isfile(infile))
     manifest = genSapMap(
-        shapes,
-        raster,
+        infile,
         outResolution=resolution,
         bounds=[-100, -100, 100, 100],
         areaFactor=pixelArea,
         allTouched=True
     )
-    assert(os.path.isfile(raster))
+    assert(os.path.isfile(outfile))
     assert(len(manifest['included']) == 1)
 
-    with rasterio.open(raster) as reader:
+    with rasterio.open(outfile) as reader:
         assert(manifest['outBounds'][0] == reader.bounds.left)
         assert(manifest['outBounds'][1] == reader.bounds.bottom)
         assert(manifest['outBounds'][2] == reader.bounds.right)

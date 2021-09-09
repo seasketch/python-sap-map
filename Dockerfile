@@ -18,6 +18,7 @@ RUN pip uninstall cython --yes
 
 FROM base as workspace
 RUN pip install -r requirements_dev.txt
+RUN echo "export PATH=/work/scripts:${PATH}" >> /root/.bashrc
 WORKDIR /work
 
 # ------ Production image

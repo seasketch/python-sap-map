@@ -69,22 +69,13 @@ A Docker recipe is available to install it in an isolated virtual environment on
 
 1. First install and start [Docker Desktop](https://www.docker.com/) on your local computer.  Windows, MacOS, Linux are all supported.
 
-2. Then build the sapmap image and start a container instance:
+2. Clone the code, build a docker image, run a container with the image and open a shell to it, run final sap setup, then run the test suite to verify it's working:
 ```bash
-    # Clone the sapmap repo locally
     git clone https://github.com/seasketch/python-sap-map.git
     cd python-sap-map
-    
-    # Build the docker container
     docker-compose build sapmap
-    
-    # Start the docker container, attach the source code, and open a shell session inside as root user
     docker-compose run --rm --service-ports sapmap
-    
-    # Install sapmap module inside container, symlinking to site-packages, making it available to run
-    pip install -e .
-
-    # Run test suite:
+    setup_sap_map
     pytest
 ```
 

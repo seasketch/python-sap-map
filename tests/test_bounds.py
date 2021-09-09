@@ -3,24 +3,22 @@ import os.path
 import rasterio
 import numpy as np
 
+DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 resolution = 100
 pixelArea = resolution * resolution
 
 def test_outer_bounds():
     """ Test bounds larger than the input features
     """
-    INPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "input")
-    OUTPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
+    infile = os.path.join(DATA, 'simple-polygon.geojson')
+    outfile = os.path.join(DATA, 'simple-polygon.tif')
 
-    shapes = os.path.join(INPUT, 'simple-polygon.geojson')
-    raster = os.path.join(OUTPUT, 'simple-polygon.tif')
-
-    assert(os.path.isfile(shapes))
-    manifest = genSapMap(shapes, raster, outResolution=resolution, bounds=[-400, -400, 400, 400], areaFactor=pixelArea)
-    assert(os.path.isfile(raster))
+    assert(os.path.isfile(infile))
+    manifest = genSapMap(infile, outResolution=resolution, bounds=[-400, -400, 400, 400], areaFactor=pixelArea)
+    assert(os.path.isfile(outfile))
     assert(len(manifest['included']) == 5)
 
-    with rasterio.open(os.path.join(OUTPUT, 'simple-polygon.tif')) as reader:
+    with rasterio.open(os.path.join(DATA, 'simple-polygon.tif')) as reader:
         assert(manifest['outBounds'][0] == reader.bounds.left)
         assert(manifest['outBounds'][1] == reader.bounds.bottom)
         assert(manifest['outBounds'][2] == reader.bounds.right)
@@ -51,18 +49,20 @@ def test_outer_bounds():
 def test_inner_bounds():
     """ Test bounds larger than the input features
     """
-    INPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "input")
-    OUTPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
+    infile = os.path.join(DATA, 'simple-polygon.geojson')
+    outfile = os.path.join(DATA, 'simple-polygon.tif')
 
-    shapes = os.path.join(INPUT, 'simple-polygon.geojson')
-    raster = os.path.join(OUTPUT, 'simple-polygon.tif')
-
-    assert(os.path.isfile(shapes))
-    manifest = genSapMap(shapes, raster, outResolution=resolution, bounds=[-100, -100, 100, 100], areaFactor=pixelArea)
-    assert(os.path.isfile(raster))
+    assert(os.path.isfile(infile))
+    manifest = genSapMap(
+        infile,
+        outResolution=resolution,
+        bounds=[-100, -100, 100, 100],
+        areaFactor=pixelArea
+    )
+    assert(os.path.isfile(outfile))
     assert(len(manifest['included']) == 5)
 
-    with rasterio.open(raster) as reader:
+    with rasterio.open(outfile) as reader:
         assert(manifest['outBounds'][0] == reader.bounds.left)
         assert(manifest['outBounds'][1] == reader.bounds.bottom)
         assert(manifest['outBounds'][2] == reader.bounds.right)
