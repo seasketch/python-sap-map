@@ -16,7 +16,7 @@ MANIFEST
 
 tests/output/*
 !tests/output/README.md
-examples/*.tif
-examples/*/input/*
-examples/*/output/*
-examples/**/*.tif
+examples/*/*.tif
+examples/*/*.log.txt
+examples/*/*.geojson
+examples/*/*.manifest.json

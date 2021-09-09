@@ -2,23 +2,19 @@ import math
 import rasterio
 from rasterio.features import bounds, rasterize
 from rasterio.enums import MergeAlg
+from rasterio.crs import CRS
 import rasterio.shutil
-import fiona
 from reprojectFeature import reprojectPolygon
 from shapely.geometry import shape, box
+import fiona
 import simplejson
 import time
 import datetime
 from sapmap.calc_raster_props import calcRasterProps
 from sapmap.calc_sap import calcSap
-from rasterio.crs import CRS
 
 def genSapMap(
   infile,
-  outfile,
-  logfile=None,
-  manifestfile=None,
-  errorfile=None,
   importanceField=None,
   importanceFactorField=None,
   areaFactor=1,
@@ -30,15 +26,12 @@ def genSapMap(
   allTouched=False,
   fixGeom=False,
   maxArea=None,
-  maxSap=None
+  maxSap=None,
+  logToFile=False,
 ):
   """Generates Spatial Access Priority (SAP) raster map given run configuration and returns manifest
 
   infile: path+filename of vector dataset containing features, format must be supported by fiona/gdal
-  outfile: path+filename of output raster geotiff
-  logfile: path+filename of output logfile
-  manifestfile: path+filename of output manifest
-  errorfile: path+filename.geojson of shapes that are invalid.  This must be specified for file to be generated
   importanceField: name of vector attribute containing importance value used for SAP calculation
   importanceFactorField: name of vector attribute containing importanceFactor value for importance
   areaFactor: factor to change the area by dividing. For example if area of geometry is calculated in square meters, an areaFactor of 1,000,000 will make the SAP per square km. because 1 sq. km = 1000m x 1000m = 1mil sq. meters 
@@ -49,11 +42,19 @@ def genSapMap(
   boundsPrecision: number of digits to round the coordinates of bound calculation to. useful if don't snap to numbers as expected
   allTouched: (boolean) Include a pixel in the mask if it touches any of the shapes. If False (default), include a pixel only if its center is within one of the shapes, or if it is selected by Bresenham’s line algorithm.
   fixGeom: if an invalid geometry is found, if fixGeom is True it attempts to fix using buffer(0), otherwise it fails.  Review the log to make sure the automated fix was acceptable
+  logToFile: (boolean) whether to output logs, errors, and manifest to file or stdout
   """
   startTime = time.perf_counter()
   src_shapes = fiona.open(infile)
   outCrs = CRS.from_string(outCrsString)
   error_shapes = []
+
+  # output files have the same name as infile
+  inBasename = infile.split('.')[0]
+  outfile = "{}.tif".format(inBasename)
+  logfile = "{}.log.txt".format(inBasename) if logToFile else None
+  manifestfile = "{}.manifest.json".format(inBasename) if logToFile else None
+  errorfile = "{}.error.geojson".format(inBasename) if logToFile else None
 
   manifest = {
     'timestamp': datetime.datetime.now().astimezone().isoformat(),
@@ -62,6 +63,7 @@ def genSapMap(
       'outfile': outfile,
       'logfile': logfile,
       'manifestfile': manifestfile,
+      'errorfile': errorfile,
       'importanceField': importanceField,
       'importanceFactorField': importanceFactorField,
       'uniqueIdField': uniqueIdField,

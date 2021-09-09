@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+
+from sapmap import genSapMap
+import os.path
+import sys
+import json
+
+usage = "gen_sap_map path/to/config.json"
+
+# Load config
+configPath = sys.argv[1]
+if not os.path.isfile(configPath):
+  raise usage
+
+f = open(configPath,)
+config = json.load(f)
+
+# Check for default and multi-run, otherwise assume single run
+default = config['default'] if 'default' in config else {}
+runs = config['runs'] if 'runs' in config else [config]
+
+for run in runs:
+  genSapMap(**{**default, **run})

@@ -55,7 +55,7 @@ The SAP value of each pixel is then calculated as the sum of the SAP values of t
 
 The magnitude of the SAP value for each pixel is not important, only its value in relation to other pixels, and the portion of the overall value it represents.
 
-Notice that the polygon that had an importance of 10 yields a pixel with a SAP value of 1.  This is due to it having a relatively large importance for its small area.  The sum of the values across the image is 5, so this one pixel represents 20% of the overall value.
+Notice that the polygon that had an importance of 10 yields a pixel with a SAP value of 1.  This is due to it having a relatively large importance for its small area.  The sum of all pixel values is 5, so this one pixel represents 20% of the overall value or importance.
 
 ## Reference Publications
 
@@ -65,7 +65,7 @@ Klein CJ, Steinback C, Watts M, Scholz AJ, Possingham HP (2010) Spatial marine z
 
 ## Installation
 
-`sapmap` is only available in source code form.  A Docker recipe is available to install it in an isolated virtual environment with all of its dependencies.  In the future, a published module may be made available.
+A Docker recipe is available to install it in an isolated virtual environment on your local computer with all dependencies.  In the future, a published module may be made available.
 
 1. First install and start [Docker Desktop](https://www.docker.com/) on your local computer.  Windows, MacOS, Linux are all supported.
 
@@ -82,7 +82,7 @@ Klein CJ, Steinback C, Watts M, Scholz AJ, Possingham HP (2010) Spatial marine z
     docker-compose run --rm --service-ports sapmap
     
     # Install sapmap module inside container, symlinking to site-packages, making it available to run
-    pip install -e ./
+    pip install -e .
 
     # Run test suite:
     pytest

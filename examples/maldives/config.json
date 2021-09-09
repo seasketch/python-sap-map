@@ -1,0 +1,8 @@
+{
+    "infile": "maldives-poly.geojson",
+    "outResolution": 100,
+    "areaFactor": 10000,
+    "bounds": [ 69.2059302961716, -3.31163877293011, 77.1059530649939, 8.09388888907046 ],
+    "uniqueIdField": "id",
+    "logToFile": true
+}
