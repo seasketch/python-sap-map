@@ -1,7 +1,7 @@
 
 # sapmap
 
-|BuildStatus|_
+![sapmap package](https://github.com/seasketch/python-sap-map/actions/workflows/main.yml/badge.svg)
 
 `sapmap` takes the areas that a group of people identify as important and combines them to produce a map of `spatial access priorities (SAP)`
 
