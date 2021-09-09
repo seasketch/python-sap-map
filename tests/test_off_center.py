@@ -3,6 +3,9 @@ import os.path
 import rasterio
 import numpy as np
 
+resolution = 100
+pixelArea = resolution * resolution
+
 def test_off_center():
     INPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "input")
     OUTPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
@@ -11,7 +14,13 @@ def test_off_center():
     raster = os.path.join(OUTPUT, 'off-center-polygon.tif')
 
     assert(os.path.isfile(shapes))
-    manifest = genSapMap(shapes, raster, outResolution=100, bounds=[-100, -100, 100, 100])
+    manifest = genSapMap(
+        shapes,
+        raster,
+        outResolution=resolution,
+        bounds=[-100, -100, 100, 100],
+        areaFactor=pixelArea
+    )
     assert(os.path.isfile(raster))
     assert(len(manifest['included']) == 1)
 
@@ -38,7 +47,14 @@ def test_all_touched():
     raster = os.path.join(OUTPUT, 'off-center-polygon.tif')
 
     assert(os.path.isfile(shapes))
-    manifest = genSapMap(shapes, raster, outResolution=100, bounds=[-100, -100, 100, 100], allTouched=True)
+    manifest = genSapMap(
+        shapes,
+        raster,
+        outResolution=resolution,
+        bounds=[-100, -100, 100, 100],
+        areaFactor=pixelArea,
+        allTouched=True
+    )
     assert(os.path.isfile(raster))
     assert(len(manifest['included']) == 1)
 

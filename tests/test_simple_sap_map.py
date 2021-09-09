@@ -3,6 +3,9 @@ import os.path
 import rasterio
 import numpy as np
 
+resolution = 100
+pixelArea = (resolution * resolution)
+
 def test_simple_sap_map():
     INPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "input")
     OUTPUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
@@ -11,7 +14,7 @@ def test_simple_sap_map():
     raster = os.path.join(OUTPUT, 'simple-polygon.tif')
 
     assert(os.path.isfile(shapes))
-    manifest = genSapMap(shapes, raster, outResolution=100)
+    manifest = genSapMap(shapes, raster, outResolution=resolution, areaFactor=pixelArea)
     assert(os.path.isfile(raster))
     assert(len(manifest['included']) == 5)
 
@@ -46,7 +49,7 @@ def test_importance_sap_map():
     raster = os.path.join(OUTPUT, 'simple-polygon.tif')
 
     assert(os.path.isfile(shapes))
-    manifest = genSapMap(shapes, raster, outResolution=100, importanceField='importance')
+    manifest = genSapMap(shapes, raster, outResolution=resolution, areaFactor=pixelArea, importanceField='importance')
     assert(os.path.isfile(raster))
     assert(len(manifest['included']) == 5)
 

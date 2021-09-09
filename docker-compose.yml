@@ -17,3 +17,9 @@ services:
     ports:
       - 5678:5678
     command: ["bash"]
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 14000M
+    #     reservations:
+    #       memory: 14000M

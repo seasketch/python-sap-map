@@ -17,6 +17,6 @@ MANIFEST
 tests/output/*
 !tests/output/README.md
 examples/*.tif
-examples/project/input
-examples/project/output
+examples/*/input/*
+examples/*/output/*
 examples/**/*.tif

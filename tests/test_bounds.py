@@ -3,6 +3,9 @@ import os.path
 import rasterio
 import numpy as np
 
+resolution = 100
+pixelArea = resolution * resolution
+
 def test_outer_bounds():
     """ Test bounds larger than the input features
     """
@@ -13,7 +16,7 @@ def test_outer_bounds():
     raster = os.path.join(OUTPUT, 'simple-polygon.tif')
 
     assert(os.path.isfile(shapes))
-    manifest = genSapMap(shapes, raster, outResolution=100, bounds=[-400, -400, 400, 400])
+    manifest = genSapMap(shapes, raster, outResolution=resolution, bounds=[-400, -400, 400, 400], areaFactor=pixelArea)
     assert(os.path.isfile(raster))
     assert(len(manifest['included']) == 5)
 
@@ -55,7 +58,7 @@ def test_inner_bounds():
     raster = os.path.join(OUTPUT, 'simple-polygon.tif')
 
     assert(os.path.isfile(shapes))
-    manifest = genSapMap(shapes, raster, outResolution=100, bounds=[-100, -100, 100, 100])
+    manifest = genSapMap(shapes, raster, outResolution=resolution, bounds=[-100, -100, 100, 100], areaFactor=pixelArea)
     assert(os.path.isfile(raster))
     assert(len(manifest['included']) == 5)
 

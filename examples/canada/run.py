@@ -3,18 +3,13 @@ import os.path
 import time
 
 input = [
-    "Aquaculture_Area.shp",
-    "Boating_Area.shp",
-    "Commercial_Fishing_Area.shp",
-    "Other_Area.shp",
-    "Passive_Recreation___Conservation_Area.shp",
-    "Recreational_Fishing_Area.shp",
-    "Shipping_Area.shp",
-    "Tourism_Area.shp",
-    "Utilities_Area.shp"
+    "testPolygons.geojson"
 ]
 
-eez_bounds = [ -68.9170557997853, 28.9057705996336, -60.7047988004242, 35.8085514002271 ]
+eez_bounds = [ -141.002725124365, 40.0511489973286, -47.6941470240656, 86.4318731326392 ]
+
+resolution = 350
+pixelArea = (resolution * resolution)
 
 runs = []
 for infile in input:
@@ -24,8 +19,9 @@ for infile in input:
         "logfile": "output/{}.log.txt".format(infile.split('.')[0]),
         "manifestfile": "output/{}.manifest.json".format(infile.split('.')[0]),
         "errorfile": "output/{}.error.geojson".format(infile.split('.')[0]),
-        "outResolution": 100,
+        "outResolution": resolution,
         "bounds": eez_bounds,
+        "areaFactor": pixelArea,
         "uniqueIdField": "id",
         "fixGeom": True,
         "allTouched": False

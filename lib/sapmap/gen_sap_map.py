@@ -21,6 +21,7 @@ def genSapMap(
   errorfile=None,
   importanceField=None,
   importanceFactorField=None,
+  areaFactor=1,
   uniqueIdField=None,
   outCrsString='epsg:3857',
   outResolution=1000,
@@ -40,6 +41,7 @@ def genSapMap(
   errorfile: path+filename.geojson of shapes that are invalid.  This must be specified for file to be generated
   importanceField: name of vector attribute containing importance value used for SAP calculation
   importanceFactorField: name of vector attribute containing importanceFactor value for importance
+  areaFactor: factor to change the area by dividing. For example if area of geometry is calculated in square meters, an areaFactor of 1,000,000 will make the SAP per square km. because 1 sq. km = 1000m x 1000m = 1mil sq. meters 
   uniqueIdField: field containing a unique Id for feature to use for logging the list of features included in the raster for verification.  Must not allow person to be re-identified
   outCrsString: the epsg code for the output raster coordinate system, defaults to epsg:3857 aka Web Mercator
   outResolution: length/width of planning unit in units of output coordinate system, defaults to 1000 (1000m = 1km)
@@ -75,8 +77,7 @@ def genSapMap(
   log = []
 
   inBounds = bounds if bounds else src_shapes.bounds
-  (outBounds, width, height, outTransform) = calcRasterProps(inBounds, src_shapes.crs, outCrsString, outResolution, boundsPrecision)
-  areaPerCell = (outResolution * outResolution)
+  (outBounds, width, height, outTransform) = calcRasterProps(inBounds, src_shapes.crs, outCrsString, outResolution, boundsPrecision)  
 
   manifest['height'] = height
   manifest['width'] = width
@@ -124,7 +125,7 @@ def genSapMap(
           calcSap(
             shapeGeom,
             feature['properties'][importanceField] if importanceField else 1,
-            areaPerCell,
+            areaFactor,
             feature['properties'][importanceFactorField] if importanceFactorField else 1,
             maxArea,
             maxSap
@@ -152,6 +153,17 @@ def genSapMap(
       all_touched=allTouched
   )
 
+  if logfile:
+    with open(logfile, 'w') as logFile:
+      for item in log:
+          logFile.write("%s\n" % item)
+  elif len(log) > 0:
+      print('Log:')
+      for item in log:
+        print(item)
+      print('')
+  print('')
+
   with rasterio.open(
     outfile,
     'w',
@@ -162,7 +174,7 @@ def genSapMap(
     nodata=0,
     dtype='float32',
     crs=outCrs,
-    transform=outTransform,
+    transform=outTransform
   ) as out:
     out.write(result, indexes=1)
   
@@ -185,16 +197,7 @@ def genSapMap(
       print(simplejson.dumps(manifest, indent=2))
       print('')
 
-  if logfile:
-    with open(logfile, 'w') as logFile:
-      for item in log:
-          logFile.write("%s\n" % item)
-  elif len(log) > 0:
-      print('Log:')
-      for item in log:
-        print(item)
-      print('')
-  print('')
+
 
   if errorfile and len(error_shapes) > 0:
     with open(errorfile, 'w') as errorFile:
