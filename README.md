@@ -9,7 +9,7 @@
 
 This aggregate map is very useful in area-based planning exercises for identifying where important areas exist for a given group and for measuring the impact if changes in access are made.
 
-And it does this without identifying the individual respondents and their areas.
+And it does this without identifying the individual respondents and which areas they contributed.
 
 Common questions these maps can answer include:
 ```
