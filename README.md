@@ -3,15 +3,17 @@
 
 |BuildStatus|_
 
-`sapmap` takes the areas that people identify as important and combines them to produce a map of the groups `spatial access priorities (SAP)`
+`sapmap` takes the areas that a group of people identify as important and combines them to produce a map of `spatial access priorities (SAP)`
 
 ![example polygon](docs/survey-sap-start-end.png)
 
-This is very useful in area-based planning exercises for quantifying the importance of areas across the landscape to a group of people, and measuring the impact to that group if changes in access are made.
+This aggregate map is very useful in area-based planning exercises for identifying where important areas exist for a given group and for measuring the impact if changes in access are made.
 
-Common questions they can answer include:
+And it does this without identifying the individual respondents and their areas.
+
+Common questions these maps can answer include:
 ```
-Which geographic areas are important to the group?  The most important?  The least?
+Which geographic areas are important to the group?  The most important?  The least important?
 
 Is area A of more value to the group than area B?  How much more?
 
@@ -19,7 +21,6 @@ If the use of a given area is changed, will people be impacted?  How much of the
 ```
 
 ## Overview
-
 Here's how it works at a high-level.
 
 Assume two people draw areas important to them. Person one draws 2 polygons (in orange), and Person two draws 3 polygons (in green).
