@@ -1,0 +1,25 @@
+# Setup sapmap workspace container
+
+version: '3'
+services:
+  sapmap:
+    container_name: sapmap
+    image: seasketch/sapmap:1.0.0
+    build:
+      context: .             # use dockerfile
+      target: workspace
+    #working_dir: /work      #comment out for build.target:prod
+    #entrypoint: /bin/sh     #comment out for build.target:prod
+    #stdin_open: true        #comment out for build.target:prod
+    #tty: true               #comment out for build.target:prod
+    volumes:
+    - ./:/work
+    ports:
+      - 5678:5678
+    command: ["bash"]
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 14000M
+    #     reservations:
+    #       memory: 14000M

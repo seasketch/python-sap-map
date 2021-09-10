@@ -1,0 +1,8 @@
+pytest>=4.6
+
+coverage
+debugpy
+simplejson
+twine
+numpydoc
+pytest-cov

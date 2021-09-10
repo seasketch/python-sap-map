@@ -1,0 +1,1 @@
+To run examples, you need to either install sapmap from pypi (see the [README](../README.rst)), or install a local dev version (see [CONTRIBUTING.md](../CONTRIBUTING.md))

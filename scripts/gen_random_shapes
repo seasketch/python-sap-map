@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+
+const turf = require('@turf/turf')
+const fs = require('fs')
+
+const usage = "Usage: gen_random_shapes config_path outfile"
+
+let configPath = process.argv[2]
+let outfile = process.argv[3]
+if (!configPath || !outfile) throw new Error(usage)
+
+let config = undefined
+config = JSON.parse(fs.readFileSync(configPath, {encoding:'utf8', flag:'r'}));
+
+const numShapes = config.testShapes || 1000
+if (!numShapes || numShapes <= 0) throw new Error("Missing testShapes (integer) in config")
+
+const bounds = config.testShapes_bounds || config.bounds
+if (!bounds) throw new Error("Missing bounds or testShapes_bounds in config")
+
+const max_radial_length = config.testShapes_maxRadialLength || 0.5
+
+const randPolys = turf.randomPolygon(
+  numShapes,
+  { bbox: bounds, max_radial_length }
+)
+
+const proppedPolys = turf.featureReduce(randPolys, (previousValue, currentFeature, featureIndex) => {
+  return previousValue.concat({ 
+    ...currentFeature,
+    id: featureIndex,
+    properties: { id: featureIndex, importance: Math.floor(Math.random() * 100) }
+  })
+}, []);
+
+const fc = turf.featureCollection(proppedPolys)
+
+let data = JSON.stringify(fc, null, 2);
+
+fs.writeFile(outfile, data, (err) => {
+  if (err) throw err;
+  console.log(`Shapes written to ${outfile}`);
+});

@@ -1,0 +1,5 @@
+{
+  "infile": "survey-poly.geojson",
+  "outResolution": 25,
+  "areaFactor": 625
+}

@@ -1,0 +1,6 @@
+affine<3.0
+shapely
+numpy>=1.9
+rasterio>=1.0
+cligj>=0.4
+fiona
