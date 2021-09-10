@@ -29,20 +29,24 @@ def genSapMap(
   maxSap=None,
   logToFile=False,
 ):
-  """Generates Spatial Access Priority (SAP) raster map given run configuration and returns manifest
+  """Generates Spatial Access Priority (SAP) raster map given run configuration
 
-  infile: path+filename of vector dataset containing features, format must be supported by fiona/gdal
-  importanceField: name of vector attribute containing importance value used for SAP calculation
-  importanceFactorField: name of vector attribute containing importanceFactor value for importance
-  areaFactor: factor to change the area by dividing. For example if area of geometry is calculated in square meters, an areaFactor of 1,000,000 will make the SAP per square km. because 1 sq. km = 1000m x 1000m = 1mil sq. meters 
-  uniqueIdField: field containing a unique Id for feature to use for logging the list of features included in the raster for verification.  Must not allow person to be re-identified
-  outCrsString: the epsg code for the output raster coordinate system, defaults to epsg:3857 aka Web Mercator
-  outResolution: length/width of planning unit in units of output coordinate system, defaults to 1000 (1000m = 1km)
-  bounds: bounds to use for output raster, as [w, s, e, n] in CRS of infile.  Output raster will align to the top left, but will extend past the bottom right as needed to the next multiple of outResolution
-  boundsPrecision: number of digits to round the coordinates of bound calculation to. useful if don't snap to numbers as expected
-  allTouched: (boolean) Include a pixel in the mask if it touches any of the shapes. If False (default), include a pixel only if its center is within one of the shapes, or if it is selected by Bresenham’s line algorithm.
-  fixGeom: if an invalid geometry is found, if fixGeom is True it attempts to fix using buffer(0), otherwise it fails.  Review the log to make sure the automated fix was acceptable
-  logToFile: (boolean) whether to output logs, errors, and manifest to file or stdout
+  Arguments:
+    infile: path+filename of vector dataset containing features, format must be supported by fiona/gdal
+    importanceField: name of vector attribute containing importance value used for SAP calculation
+    importanceFactorField: name of vector attribute containing importanceFactor value for importance
+    areaFactor: factor to change the area by dividing. For example if area of geometry is calculated in square meters, an areaFactor of 1,000,000 will make the SAP per square km. because 1 sq. km = 1000m x 1000m = 1mil sq. meters 
+    uniqueIdField: field containing a unique Id for feature to use for logging the list of features included in the raster for verification.  Must not allow person to be re-identified
+    outCrsString: the epsg code for the output raster coordinate system, defaults to epsg:3857 aka Web Mercator
+    outResolution: length/width of planning unit in units of output coordinate system, defaults to 1000 (1000m = 1km)
+    bounds: bounds to use for output raster, as [w, s, e, n] in CRS of infile.  Output raster will align to the top left, but will extend past the bottom right as needed to the next multiple of outResolution
+    boundsPrecision: number of digits to round the coordinates of bound calculation to. useful if don't snap to numbers as expected
+    allTouched: (boolean) Include a pixel in the mask if it touches any of the shapes. If False (default), include a pixel only if its center is within one of the shapes, or if it is selected by Bresenham’s line algorithm.
+    fixGeom: if an invalid geometry is found, if fixGeom is True it attempts to fix using buffer(0), otherwise it fails.  Review the log to make sure the automated fix was acceptable
+    logToFile: (boolean) whether to output logs, errors, and manifest to file or stdout
+
+  Returns:
+    Manifest of run
   """
   startTime = time.perf_counter()
   src_shapes = fiona.open(infile)
