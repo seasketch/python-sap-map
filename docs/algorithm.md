@@ -1,23 +1,4 @@
-# Overview
-
-`sapmap` takes the areas that a group identifies as important and combines them into a map of `spatial access priorities (img/SAP)`
-
-![example polygon](img/survey-sap-start-end.png)
-
-This aggregate map is very useful in area-based planning exercises for identifying where important areas exist and measuring the impact if changes in access are made.  And it does this without identifying the individual respondents and which areas they contributed.  If the number of respondents is limited, then further measures may be needed to ensure that the data can't be reidentified.
-
-Common questions these maps can answer include:
-```
-Which geographic areas are important to the group?  The most important?  The least important?
-
-Is area A of more value to the group than area B?  How much more?
-
-If the use of a given area is changed, will people be impacted?  How much of the groups value is within this area?
-```
-
-## Calculation
-
-Overview of how the SAP algorithm works start to finish.
+## Algorithm Overview
 
 Assume two people draw areas important to them. Person one draws 2 polygons (in orange), and Person two draws 3 polygons (in green).
 
