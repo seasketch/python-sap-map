@@ -1,4 +1,4 @@
-name: SAP Map Python package
+name: "Test SAP Map"
 
 on:
   pull_request:
