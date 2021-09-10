@@ -26,7 +26,7 @@ In this example,  The pixels are 25 meters per side.
 
 ![survey sap map](img/survey-burn-in.png)
 
-The SAP value of each pixel is then calculated as the sum of the SAP values of the overlapping polygons.  This can be displayed as a `heatmap` of importance.
+The SAP value of each pixel is then calculated as the sum of the SAP values of the overlapping polygons.  In other words if a polygon overlaps with a pixel, then the SAP value of that polygon is assigned to the pixel.  All of the values for that pixel are then summed together into a final SAP value for that pixel.  This can be displayed as a `heatmap` of importance.
 
 ![survey sap map](img/survey-sap-heatmap.png)
 
