@@ -29,7 +29,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add --all
-        git commit -m "$(git log '--format=format:%H' main -1)"
+        git commit -m "Update documentation"
         remote_repo="https://${GITHUB_ACTOR}:${THE_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"        
         git push "${remote_repo}" gh-pages --force
     # ===============================
