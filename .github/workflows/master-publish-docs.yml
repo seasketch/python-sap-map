@@ -17,9 +17,7 @@ jobs:
         docs-folder: "docs/"
     - name: Commit documentation changes
       run: |
-        git clone https://github.com/seasketch/python-sap-map.git --branch gh-pages --single-branch gh-pages
-        cp -r docs/_build/html/* gh-pages/
-        cd gh-pages
+        git clone https://github.com/seasketch/python-sap-map.git --branch main
         touch .nojekyll
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
@@ -28,9 +26,9 @@ jobs:
         # The above command will fail if no changes were present, so we ignore
         # that.
     - name: Push changes
-      uses: ad-m/github-push-action@master
+      uses: jbrooksuk/github-subtree-push-action@master
       with:
         branch: gh-pages
-        directory: gh-pages
+        directory: docs/_build/html
         github_token: ${{ secrets.GITHUB_TOKEN }}
     # ===============================
