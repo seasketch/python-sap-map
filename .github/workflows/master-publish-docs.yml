@@ -22,12 +22,8 @@ jobs:
         git config --local user.name "GitHub Action"
         git add .
         git commit -m "Update documentation" -a || true
+        remote_repo="https://${GITHUB_ACTOR}:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
+        git subtree push --prefix "${INPUT_PUBLISH_DIRECTORY}" "${remote_repo}" origin gh-pages
         # The above command will fail if no changes were present, so we ignore
-        # that.
-    - name: Push changes
-      uses: jbrooksuk/github-subtree-push-action@master
-      with:
-        branch: gh-pages
-        directory: docs/_build/html
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        # that.    
     # ===============================
