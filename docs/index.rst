@@ -9,6 +9,7 @@ sap-map
    algorithm.md
    publications.md
    api.rst
+   contributing.md
 
 Overview
 ========
