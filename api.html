@@ -4,8 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>sapmap module &#8212; sap-map 0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
@@ -33,63 +32,9 @@
 
           <div class="body" role="main">
             
-  <section id="module-sapmap">
-<span id="sapmap-module"></span><h1>sapmap module<a class="headerlink" href="#module-sapmap" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="sapmap.calcSap">
-<span class="sig-prename descclassname"><span class="pre">sapmap.</span></span><span class="sig-name descname"><span class="pre">calcSap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">importance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">areaFactor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">importanceFactor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxArea</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxSap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sapmap.calcSap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Core algorithm, calculates the spatial access priority (SAP) value for a single area</p>
-<p>Each respondent has a total SAP of 100, and each shape is assigned a portion
-of that 100. The SAP for a shape is calculated as (Importance / Area), which
-can be interpreted as “importance per area unit”.  The area of the shape is
-calculated in the coordinate system used, for Web Mercator that yields
-square meters.  Use the areaFactor option to change this.</p>
-<p>Use the optional importanceFactor to accommodate additional variables, changing what the SAP represents.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>geometry</strong> – Shapely geometry in 3857 (unit of meters)</p></li>
-<li><p><strong>importance</strong> – importance of geometry (1-100)</p></li>
-<li><p><strong>areaFactor</strong> – factor to change the area by dividing. For example if area of geometry is calculated in square meters, an areaFactor of 1,000,000 will make the SAP per square km. because 1 sq. km = 1000m x 1000m = 1mil sq. meters</p></li>
-<li><p><strong>importanceFactor</strong> – numeric value to multiply the importance by.  Use to scale the SAP from being ‘per respondent’ to a larger group of livelihoods or even economic values</p></li>
-<li><p><strong>maxArea</strong> – limits the area of a shape in SAP calculation.  Gives shapes with high area an artifically lower one, increasing their SAP relative to others, increasing their presence in heatmap</p></li>
-<li><p><strong>maxSap</strong> – limits the SAP value. Gives shapes with high priority an artificially lower one, decreasing their presence in heatmap</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>SAP value for shape</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="sapmap.genSapMap">
-<span class="sig-prename descclassname"><span class="pre">sapmap.</span></span><span class="sig-name descname"><span class="pre">genSapMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">importanceField</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">importanceFactorField</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">areaFactor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniqueIdField</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outCrsString</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'epsg:3857'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outResolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundsPrecision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allTouched</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixGeom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxArea</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxSap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logToFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sapmap.genSapMap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates Spatial Access Priority (SAP) raster map given run configuration</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>infile</strong> – path+filename of vector dataset containing features, format must be supported by fiona/gdal</p></li>
-<li><p><strong>importanceField</strong> – name of vector attribute containing importance value used for SAP calculation</p></li>
-<li><p><strong>importanceFactorField</strong> – name of vector attribute containing importanceFactor value for importance</p></li>
-<li><p><strong>areaFactor</strong> – factor to change the area by dividing. For example if area of geometry is calculated in square meters, an areaFactor of 1,000,000 will make the SAP per square km. because 1 sq. km = 1000m x 1000m = 1mil sq. meters</p></li>
-<li><p><strong>uniqueIdField</strong> – field containing a unique Id for feature to use for logging the list of features included in the raster for verification.  Must not allow person to be re-identified</p></li>
-<li><p><strong>outCrsString</strong> – the epsg code for the output raster coordinate system, defaults to epsg:3857 aka Web Mercator</p></li>
-<li><p><strong>outResolution</strong> – length/width of planning unit in units of output coordinate system, defaults to 1000 (1000m = 1km)</p></li>
-<li><p><strong>bounds</strong> – bounds to use for output raster, as [w, s, e, n] in CRS of infile.  Output raster will align to the top left, but will extend past the bottom right as needed to the next multiple of outResolution</p></li>
-<li><p><strong>boundsPrecision</strong> – number of digits to round the coordinates of bound calculation to. useful if don’t snap to numbers as expected</p></li>
-<li><p><strong>allTouched</strong> – (boolean) Include a pixel in the mask if it touches any of the shapes. If False (default), include a pixel only if its center is within one of the shapes, or if it is selected by Bresenham’s line algorithm.</p></li>
-<li><p><strong>fixGeom</strong> – if an invalid geometry is found, if fixGeom is True it attempts to fix using buffer(0), otherwise it fails.  Review the log to make sure the automated fix was acceptable</p></li>
-<li><p><strong>logToFile</strong> – (boolean) whether to output logs, errors, and manifest to file or stdout</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Manifest of run</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
+  <div class="section" id="sapmap-module">
+<h1>sapmap module<a class="headerlink" href="#sapmap-module" title="Permalink to this headline">¶</a></h1>
+</div>
 
 
           </div>

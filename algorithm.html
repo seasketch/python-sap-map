@@ -4,8 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Algorithm Overview &#8212; sap-map 0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
@@ -33,7 +32,7 @@
 
           <div class="body" role="main">
             
-  <section id="algorithm-overview">
+  <div class="section" id="algorithm-overview">
 <h1>Algorithm Overview<a class="headerlink" href="#algorithm-overview" title="Permalink to this headline">¶</a></h1>
 <p>Assume two people draw areas important to them. Person one draws 2 polygons (in orange), and Person two draws 3 polygons (in green).</p>
 <p><img alt="example polygon" src="_images/survey-polygon.png" /></p>
@@ -44,7 +43,7 @@
 </pre></div>
 </div>
 <p>In this example, the polygon with an importance of 10 is 25 square meters per side or 625 square meters in area.  It’s SAP value is calculated as:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span> <span class="o">/</span> <span class="mi">625</span> <span class="o">=</span> <span class="mf">.016</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span> <span class="o">/</span> <span class="mi">625</span> <span class="o">=</span> <span class="o">.</span><span class="mi">016</span>
 </pre></div>
 </div>
 <p><img alt="survey sap map" src="_images/survey-polygon-sap.png" /></p>
@@ -55,7 +54,7 @@
 <p><img alt="survey sap map" src="_images/survey-sap-heatmap.png" /></p>
 <p>The magnitude of the SAP value for each pixel is not important, only its value in relation to other pixels, and the portion of the overall value it represents.</p>
 <p>Notice that the polygon that had an importance of 10 yields a pixel with a SAP value of 1.  This is due to it having a relatively large importance for its small area.  The sum of all pixel values is 5, so this one pixel represents 20% of the overall value or importance.</p>
-</section>
+</div>
 
 
           </div>

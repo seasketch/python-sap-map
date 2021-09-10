@@ -4,8 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Installation and Usage &#8212; sap-map 0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
@@ -33,7 +32,7 @@
 
           <div class="body" role="main">
             
-  <section class="tex2jax_ignore mathjax_ignore" id="installation-and-usage">
+  <div class="tex2jax_ignore mathjax_ignore section" id="installation-and-usage">
 <h1>Installation and Usage<a class="headerlink" href="#installation-and-usage" title="Permalink to this headline">¶</a></h1>
 <p>A Docker recipe is available to install <code class="docutils literal notranslate"><span class="pre">sapmap</span></code> in an isolated virtual environment on your local computer with all dependencies.  In the future, a published module may be made available.</p>
 <ol class="simple">
@@ -48,21 +47,21 @@
     pytest
 </pre></div>
 </div>
-<section id="example-projects">
+<div class="section" id="example-projects">
 <h2>Example Projects<a class="headerlink" href="#example-projects" title="Permalink to this headline">¶</a></h2>
 <p>Multiple example projects are included that can be run out of the box.</p>
 <p><span class="xref myst">Simple</span> - small geographic extent.  Very simple test dataset with polygons that aligned to 100m boundaries for ease of interpreting the result.  Produces raster with 100m cell size.</p>
 <p><span class="xref myst">Maldives</span> - medium geographic extent.  Produces raster with 100m cell size.</p>
 <p><span class="xref myst">Canada</span> - large geographic extent. Demonstrates pushing the limits of raster file size and memory usage.  Produces raster with 400m cell size.</p>
-<section id="run-the-simple-project">
+<div class="section" id="run-the-simple-project">
 <h3>Run the Simple project<a class="headerlink" href="#run-the-simple-project" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">examples</span><span class="o">/</span><span class="n">simple</span>
 <span class="n">gen_sap_map</span> <span class="n">config</span><span class="o">.</span><span class="n">json</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="run-the-canada-project">
+</div>
+</div>
+<div class="section" id="run-the-canada-project">
 <h2>Run the Canada project<a class="headerlink" href="#run-the-canada-project" title="Permalink to this headline">¶</a></h2>
 <p>You will need to generate random input data first.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">examples</span><span class="o">/</span><span class="n">canada</span>
@@ -72,8 +71,8 @@
 <span class="n">gen_sap_map</span> <span class="n">config</span><span class="o">.</span><span class="n">json</span>
 </pre></div>
 </div>
-</section>
-<section id="creating-a-new-project">
+</div>
+<div class="section" id="creating-a-new-project">
 <h2>Creating a New Project<a class="headerlink" href="#creating-a-new-project" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Start with copying any of the example folders</p></li>
@@ -84,10 +83,10 @@
 <ul class="simple">
 <li><p>Useful <a class="reference external" href="https://tools.geofabrik.de/calc/#type=geofabrik_standard&amp;tab=1&amp;proj=EPSG:4326&amp;places=2">tool</a> to quickly identify bounds.</p></li>
 </ul>
-</section>
-<section id="alternative-install-work-in-progress">
+</div>
+<div class="section" id="alternative-install-work-in-progress">
 <h2>Alternative Install (Work in progress)<a class="headerlink" href="#alternative-install-work-in-progress" title="Permalink to this headline">¶</a></h2>
-<section id="install-and-run-in-osx">
+<div class="section" id="install-and-run-in-osx">
 <h3>Install and run in OSX<a class="headerlink" href="#install-and-run-in-osx" title="Permalink to this headline">¶</a></h3>
 <p>Install pipenv to your user home directory:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">pip3</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span> <span class="n">pipenv</span>
@@ -101,8 +100,8 @@
     <span class="n">pip3</span> <span class="n">install</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">binary</span> <span class="n">fiona</span> <span class="n">rasterio</span> <span class="n">shapely</span>
 </pre></div>
 </div>
-</section>
-<section id="install-and-run-in-windows">
+</div>
+<div class="section" id="install-and-run-in-windows">
 <h3>Install and run in Windows<a class="headerlink" href="#install-and-run-in-windows" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Install VS Code - https://code.visualstudio.com/Download</p></li>
@@ -129,8 +128,8 @@
 </div>
 <p>Follow the rasterio windows instructions - https://rasterio.readthedocs.io/en/latest/installation.html#windows
 Pointed to install GDAL and Rasterio wheels from https://www.lfd.uci.edu/~gohlke/pythonlibs/#gdal.  Look for the latest win_amd64:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">pip</span> <span class="n">install</span> <span class="o">.</span>\<span class="n">GDAL</span><span class="o">-</span><span class="mf">3.3.1</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">win_amd64</span><span class="o">.</span><span class="n">whl</span>
-    <span class="n">pip</span> <span class="n">install</span> <span class="o">.</span>\<span class="n">rasterio</span><span class="o">-</span><span class="mf">1.2.6</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">win_amd64</span><span class="o">.</span><span class="n">whl</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">pip</span> <span class="n">install</span> <span class="o">.</span>\<span class="n">GDAL</span><span class="o">-</span><span class="mf">3.3</span><span class="o">.</span><span class="mi">1</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">win_amd64</span><span class="o">.</span><span class="n">whl</span>
+    <span class="n">pip</span> <span class="n">install</span> <span class="o">.</span>\<span class="n">rasterio</span><span class="o">-</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">6</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">win_amd64</span><span class="o">.</span><span class="n">whl</span>
     <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
     <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements_dev</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
@@ -139,9 +138,9 @@ Pointed to install GDAL and Rasterio wheels from https://www.lfd.uci.edu/~gohlke
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">deactivate</span>
 </pre></div>
 </div>
-</section>
-</section>
-</section>
+</div>
+</div>
+</div>
 
 
           </div>
