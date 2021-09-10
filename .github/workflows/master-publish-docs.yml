@@ -24,7 +24,5 @@ jobs:
         git config --local user.name "GitHub Action"
         git add .
         git commit -m "Update documentation" -a || true
-        git subtree push --prefix docs/_build/html "https://${GITHUB_ACTOR}:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" origin gh-pages
-        # The above command will fail if no changes were present, so we ignore
-        # that.    
+        git subtree push --prefix docs/_build/html "https://${GITHUB_ACTOR}:${THE_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" origin gh-pages
     # ===============================
