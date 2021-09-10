@@ -25,5 +25,5 @@ jobs:
         git add .
         git commit -m "Update documentation" -a || true
         remote_repo="https://${GITHUB_ACTOR}:${THE_TOKEN}@github.com/${REPOSITORY}.git"
-        git subtree push --prefix docs/_build/html "${remote_repo}" origin gh-pages
+        git subtree push --prefix docs/_build/html "${remote_repo}" gh-pages
     # ===============================
