@@ -50,11 +50,20 @@ Multiple example projects are included that can be run out of the box with gener
 
 [Canada](/examples/canada) - large geography. Produces GeoTIFF larger than 4GB with 400m cell size.
 
-### Run the Simple Project
+### Run the Simple project
 
 ```
 cd examples/simple
-python run.py
+gen_sap_map config.json
+```
+
+### Run the Canada project
+```
+cd examples/canada
+
+../../scripts/gen_random_shapes config.json canada-poly.geojson
+
+gen_sap_map config.json
 ```
 
 ## Creating a New Project
@@ -65,9 +74,6 @@ python run.py
 
 Bounds:
 * Useful [tool](https://tools.geofabrik.de/calc/#type=geofabrik_standard&tab=1&proj=EPSG:4326&places=2) to quickly identify bounds.
-
-Random data:
-* If you don't have input data then you can generate sample data using `gen_random_shapes`
 
 ## Debugging
 The `examples` folder includes samples to get you started.  
