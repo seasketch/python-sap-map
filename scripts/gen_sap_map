@@ -5,7 +5,7 @@ import os.path
 import sys
 import json
 
-usage = "gen_sap_map path/to/config.json"
+usage = "Usage: gen_sap_map path/to/config.json"
 
 # Load config
 configPath = sys.argv[1]

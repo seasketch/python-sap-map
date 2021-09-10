@@ -4,5 +4,6 @@
     "areaFactor": 250000,
     "bounds": [ -141.002725124365, 40.0511489973286, -47.6941470240656, 86.4318731326392 ],
     "uniqueIdField": "id",
-    "logToFile": true
+    "logToFile": true,
+    "testShapes": 10000
 }
