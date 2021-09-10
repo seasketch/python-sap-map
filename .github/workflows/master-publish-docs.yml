@@ -24,5 +24,6 @@ jobs:
         git config --local user.name "GitHub Action"
         git add .
         git commit -m "Update documentation" -a || true
-        git subtree push --prefix docs/_build/html "https://${GITHUB_ACTOR}:${THE_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" origin gh-pages
+        remote_repo="https://${GITHUB_ACTOR}:${THE_TOKEN}@github.com/${REPOSITORY}.git"
+        git subtree push --prefix docs/_build/html "${remote_repo}" origin gh-pages
     # ===============================
