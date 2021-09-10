@@ -12,18 +12,25 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - name: Replace html dir with worktree
+      run: |
+        rm -rf docs/_build/html
+        echo "docs/_build/html" >> .gitignore
+        git worktree add docs/_build/html gh-pages
     - uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
-    - name: Commit documentation changes
+    - name: Commit worktree to gh-pages
       env:
         THE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        touch .nojekyll
+        cd docs/_build/html
+        touch docs/_build/html/.nojekyll
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add .
-        git commit -m "Update documentation" -a || true
-        remote_repo="https://${GITHUB_ACTOR}:${THE_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-        git subtree push --prefix docs/_build/html "${remote_repo}" gh-pages
+        git add --all
+        git commit -m "$(git log '--format=format:%H' main -1)"
+        remote_repo="https://${GITHUB_ACTOR}:${THE_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"        
+        git push "${remote_repo}" gh-pages --force
     # ===============================
+
