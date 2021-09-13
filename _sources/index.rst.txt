@@ -1,5 +1,5 @@
-sap-map
-=======
+Spatal Access Priority Mapping (sap-map)
+========================================
 
 .. toctree::
    :maxdepth: 2
