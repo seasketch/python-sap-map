@@ -20,16 +20,16 @@ In this example, the polygon with an importance of 10 is 25 square meters per si
 
 ![survey sap map](img/survey-polygon-sap.png)
 
-The polygons are then `rasterized` or 'burned in' to a geospatial raster image (GeoTIFF).  Each pixel in a raster represents a square geographic area of consistent size.
-
-In this example,  The pixels are 25 meters per side.
+The polygons are then `rasterized` by overlaying with a grid.  Each cell in the grid represents a geographic area.  In this example, the cells are 25 meters per side.
 
 ![survey sap map](img/survey-burn-in.png)
 
-The SAP value of each pixel is then calculated as the sum of the SAP values of the overlapping polygons.  In other words if a polygon overlaps with a pixel, then the SAP value of that polygon is assigned to the pixel.  All of the values for that pixel are then summed together into a final SAP value for that pixel.  This can be displayed as a `heatmap` of importance.
+One at a time, each rasterized polygon is 'burned in' to the grid, accumulating its SAP value as an aggregate sum.  In other words if a polygon overlaps with a cell, then the SAP value of that polygon is added to value already in that cell.
+
+The resulting grid is finally output as a geospatial raster image (GeoTIFF), which now represents each grid cell as an image pixel.
 
 ![survey sap map](img/survey-sap-heatmap.png)
 
-The magnitude of the SAP value for each pixel is not important, only its value in relation to other pixels, and the portion of the overall value it represents.
+The magnitude of the SAP value for each pixel is not important, only its value in relation to other pixels, and the portion of the total SAP value it represents.
 
 Notice that the polygon that had an importance of 10 yields a pixel with a SAP value of 1.  This is due to it having a relatively large importance for its small area.  The sum of all pixel values is 5, so this one pixel represents 20% of the overall value or importance.

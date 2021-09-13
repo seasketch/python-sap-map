@@ -47,12 +47,12 @@
 </pre></div>
 </div>
 <p><img alt="survey sap map" src="_images/survey-polygon-sap.png" /></p>
-<p>The polygons are then <code class="docutils literal notranslate"><span class="pre">rasterized</span></code> or ‘burned in’ to a geospatial raster image (GeoTIFF).  Each pixel in a raster represents a square geographic area of consistent size.</p>
-<p>In this example,  The pixels are 25 meters per side.</p>
+<p>The polygons are then <code class="docutils literal notranslate"><span class="pre">rasterized</span></code> by overlaying with a grid.  Each cell in the grid represents a geographic area.  In this example, the cells are 25 meters per side.</p>
 <p><img alt="survey sap map" src="_images/survey-burn-in.png" /></p>
-<p>The SAP value of each pixel is then calculated as the sum of the SAP values of the overlapping polygons.  In other words if a polygon overlaps with a pixel, then the SAP value of that polygon is assigned to the pixel.  All of the values for that pixel are then summed together into a final SAP value for that pixel.  This can be displayed as a <code class="docutils literal notranslate"><span class="pre">heatmap</span></code> of importance.</p>
+<p>One at a time, each rasterized polygon is ‘burned in’ to the grid, accumulating its SAP value as an aggregate sum.  In other words if a polygon overlaps with a cell, then the SAP value of that polygon is added to value already in that cell.</p>
+<p>The resulting grid is finally output as a geospatial raster image (GeoTIFF), which now represents each grid cell as an image pixel.</p>
 <p><img alt="survey sap map" src="_images/survey-sap-heatmap.png" /></p>
-<p>The magnitude of the SAP value for each pixel is not important, only its value in relation to other pixels, and the portion of the overall value it represents.</p>
+<p>The magnitude of the SAP value for each pixel is not important, only its value in relation to other pixels, and the portion of the total SAP value it represents.</p>
 <p>Notice that the polygon that had an importance of 10 yields a pixel with a SAP value of 1.  This is due to it having a relatively large importance for its small area.  The sum of all pixel values is 5, so this one pixel represents 20% of the overall value or importance.</p>
 </div>
 
@@ -117,7 +117,7 @@
       &copy;2021, The Regents of the University of California.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
