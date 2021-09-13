@@ -37,7 +37,8 @@
 <p>Once a workspace container is up, you can run a script using debugpy in your container and then connect with VSCode from the outside with its robust debugging tools.</p>
 <p>Start debupy in container listening on port, waits for vscode before executing the Python script.</p>
 <p>Running an example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">cd</span> <span class="n">examples</span><span class="o">/</span><span class="n">simple</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">cd</span> <span class="n">examples</span><span class="o">/</span><span class="n">survey</span>
+    <span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">debugpy</span> <span class="o">--</span><span class="n">listen</span> <span class="mf">0.0</span><span class="o">.</span><span class="mf">0.0</span><span class="p">:</span><span class="mi">5678</span> <span class="o">--</span><span class="n">wait</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="n">client</span> <span class="o">../../</span><span class="n">scripts</span><span class="o">/</span><span class="n">gen_sap_map</span> <span class="n">config</span><span class="o">.</span><span class="n">json</span>
     <span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">debugpy</span> <span class="o">--</span><span class="n">listen</span> <span class="mf">0.0</span><span class="o">.</span><span class="mf">0.0</span><span class="p">:</span><span class="mi">5678</span> <span class="o">--</span><span class="n">wait</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="n">client</span> <span class="n">simple_sap_map</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>

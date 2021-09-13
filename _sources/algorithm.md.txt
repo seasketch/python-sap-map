@@ -15,21 +15,25 @@ SAP value = importance / area
 
 In this example, the polygon with an importance of 10 is 25 square meters per side or 625 square meters in area.  It's SAP value is calculated as:
 ```
-10 / 625 = .016
+10 / 625 square meters = .016 / square meters
 ```
+
+This can be read as `.016 per square meter`
 
 ![survey sap map](img/survey-polygon-sap.png)
 
-The polygons are then `rasterized` by overlaying with a grid.  Each cell in the grid represents a geographic area.  In this example, the cells are 25 meters per side.
+The polygons are then `rasterized` by overlaying them with a rectangular grid of pixels.  In this example, each grid pixel represents a distinct 25 meter x 25 meter geographic area.
 
 ![survey sap map](img/survey-burn-in.png)
 
-One at a time, each rasterized polygon is 'burned in' to the grid, accumulating its SAP value as an aggregate sum.  In other words if a polygon overlaps with a cell, then the SAP value of that polygon is added to value already in that cell.
-
-The resulting grid is finally output as a geospatial raster image (GeoTIFF), which now represents each grid cell as an image pixel.
+One-by-one, each rasterized polygon is `burned-in` to the grid, producing a `heatmap` or aggregate sum of SAP value.  
 
 ![survey sap map](img/survey-sap-heatmap.png)
 
-The magnitude of the SAP value for each pixel is not important, only its value in relation to other pixels, and the portion of the total SAP value it represents.
+More specifically, for each pixel that a polygon overlaps with, the SAP value of the polygon is assigned to that pixel.  The accumulated SAP values for each pixel are summed to produce a final grid, which is output as a geospatial raster image file (GeoTIFF).
 
-Notice that the polygon that had an importance of 10 yields a pixel with a SAP value of 1.  This is due to it having a relatively large importance for its small area.  The sum of all pixel values is 5, so this one pixel represents 20% of the overall value or importance.
+Notice that the polygon that had an importance of 10 and a SAP value of .016, results in a pixel SAP value of .016.  This is because the polygon was exactly the size of a pixel (25 square meters).  The sum of all pixel values is 0.32, so this one pixel represents `(.016 / .32) = 5%` of the overall value or importance.
+
+The magnitude of a pixels value by itself is not important.  The real value is in comparing a pixels value to another.  The pixel or group of pixels with greater SAP value has more importance to the surveyed group.  Likewise, the loss of access to the area with the most value would have the greatest `cost` to the group.
+
+For this reason, Spatial Access Priority maps are frequently lused as a `cost` layer in prioritization software such as Marxan or PrioritizR, to find planning solutions that ecosystem benefits, while minimizing the cost to groups of people that use the area.
