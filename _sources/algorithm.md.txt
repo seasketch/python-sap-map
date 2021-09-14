@@ -36,4 +36,4 @@ Notice that the polygon that had an importance of 10 and a SAP value of .016, re
 
 The magnitude of a pixels value by itself is not important.  The real value is in comparing a pixels value to another.  The pixel or group of pixels with greater SAP value has more importance to the surveyed group.  Likewise, the loss of access to the area with the most value would have the greatest `cost` to the group.
 
-For this reason, Spatial Access Priority maps are frequently lused as a `cost` layer in prioritization software such as Marxan or PrioritizR, to find planning solutions that ecosystem benefits, while minimizing the cost to groups of people that use the area.
+For this reason, Spatial Access Priority maps are frequently used as a `cost` layer in prioritization software such as [Marxan](https://marxansolutions.org/) or [PrioritizR](https://prioritizr.net/), to find planning solutions that ecosystem benefits, while minimizing the cost to groups of people that use the area.
