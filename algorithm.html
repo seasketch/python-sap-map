@@ -32,7 +32,7 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="algorithm-overview">
+  <div class="tex2jax_ignore mathjax_ignore section" id="algorithm-overview">
 <h1>Algorithm Overview<a class="headerlink" href="#algorithm-overview" title="Permalink to this headline">¶</a></h1>
 <p>Assume two people draw areas important to them. Person one draws 2 polygons (in orange), and Person two draws 3 polygons (in green).</p>
 <p><img alt="example polygon" src="_images/survey-polygon.png" /></p>
@@ -53,9 +53,12 @@
 <p>One-by-one, each rasterized polygon is <code class="docutils literal notranslate"><span class="pre">burned-in</span></code> to the grid, producing a <code class="docutils literal notranslate"><span class="pre">heatmap</span></code> or aggregate sum of SAP value.</p>
 <p><img alt="survey sap map" src="_images/survey-sap-heatmap.png" /></p>
 <p>More specifically, for each pixel that a polygon overlaps with, the SAP value of the polygon is assigned to that pixel.  The accumulated SAP values for each pixel are summed to produce a final grid, which is output as a geospatial raster image file (GeoTIFF).</p>
-<p>Notice that the polygon that had an importance of 10 and a SAP value of .016, results in a pixel SAP value of .016.  This is because the polygon was exactly the size of a pixel (25 square meters).  The sum of all pixel values is 0.32, so this one pixel represents <code class="docutils literal notranslate"><span class="pre">(.016</span> <span class="pre">/</span> <span class="pre">.32)</span> <span class="pre">=</span> <span class="pre">5%</span></code> of the overall value or importance.</p>
-<p>The magnitude of a pixels value by itself is not important.  The real value is in comparing a pixels value to another.  The pixel or group of pixels with greater SAP value has more importance to the surveyed group.  Likewise, the loss of access to the area with the most value would have the greatest <code class="docutils literal notranslate"><span class="pre">cost</span></code> to the group.</p>
-<p>For this reason, Spatial Access Priority maps are frequently used as a <code class="docutils literal notranslate"><span class="pre">cost</span></code> layer in prioritization software such as <a class="reference external" href="https://marxansolutions.org/">Marxan</a> or <a class="reference external" href="https://prioritizr.net/">PrioritizR</a>, to find planning solutions that ecosystem benefits, while minimizing the cost to groups of people that use the area.</p>
+<p>Notice that the polygon that had an importance of 10 and a SAP value of .016, results in a pixel SAP value of .016.  This is because the polygon was exactly the size of a pixel (25 square meters).  The sum of all pixel values is 0.32, so this one pixel (and its geographic area) represents <code class="docutils literal notranslate"><span class="pre">(.016</span> <span class="pre">/</span> <span class="pre">.32)</span> <span class="pre">=</span> <span class="pre">5%</span></code> of the overall value or importance.</p>
+<div class="section" id="map-interpretation">
+<h2>Map Interpretation<a class="headerlink" href="#map-interpretation" title="Permalink to this headline">¶</a></h2>
+<p>The magnitude of a pixels value by itself (e.g. <code class="docutils literal notranslate"><span class="pre">.016</span></code>)  is not important.  The real value is in being able to compare one pixel to another, or one group of pixels to another group of pixels.  A higher value means more importance to the group.  And the loss of access to a geographic area with more value will have a greater <code class="docutils literal notranslate"><span class="pre">cost</span></code> to the group.</p>
+<p>For this reason, Spatial Access Priority maps are frequently used as a <code class="docutils literal notranslate"><span class="pre">cost</span></code> layer in prioritization software such as <a class="reference external" href="https://marxansolutions.org/">Marxan</a> or <a class="reference external" href="https://prioritizr.net/">PrioritizR</a>, to find spatial planning solutions that maximize for certain factors such ecological abundance or resilience, while minimizing the cost to groups of people that use the area.</p>
+</div>
 </div>
 
 
@@ -78,7 +81,10 @@
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation and Usage</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Algorithm Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Algorithm Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#map-interpretation">Map Interpretation</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">sapmap module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Debugging</a></li>
