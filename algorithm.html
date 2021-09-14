@@ -59,6 +59,14 @@
 <p>The magnitude of a pixels value by itself (e.g. <code class="docutils literal notranslate"><span class="pre">.016</span></code>)  is not important.  The real value is in being able to compare one pixel to another, or one group of pixels to another group of pixels.  A higher value means more importance to the group.  And the loss of access to a geographic area with more value will have a greater <code class="docutils literal notranslate"><span class="pre">cost</span></code> to the group.</p>
 <p>For this reason, Spatial Access Priority maps are frequently used as a <code class="docutils literal notranslate"><span class="pre">cost</span></code> layer in prioritization software such as <a class="reference external" href="https://marxansolutions.org/">Marxan</a> or <a class="reference external" href="https://prioritizr.net/">PrioritizR</a>, to find spatial planning solutions that maximize for certain factors such as ecological abundance or resilience, while minimizing the cost to groups of people that use the area.</p>
 </div>
+<div class="section" id="advanced-calculation">
+<h2>Advanced Calculation<a class="headerlink" href="#advanced-calculation" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">sapmap</span></code> provided parameters for some advanced calculations.  Review the research literature for more detailed descriptions and use cases.  See the API docs for usage.</p>
+<p><code class="docutils literal notranslate"><span class="pre">areaFactor</span></code> - By default the planning units are in meters, which can produce very small SAP values because the denominator is so large.  An areaFactor can be used to linearly scale the area to offset this.</p>
+<p><code class="docutils literal notranslate"><span class="pre">importanceFactor</span></code> - If a group of polygons should be given more or less importance than others, then an importanceFactor can be used.  The default values is 1.  For example if the polygons (together adding up to 100 importance) represent a person that uses an area only half of the year and its decided that their areas should therefor have half the importance, then a factor of 0.5 can be given.  Or if the polygons represent the areas and importance of 10 people responding together as group, where other responses only represent a single person, then an importanceFactor of 10 can be assigned.</p>
+<p>This more robust and flexible SAP calculation becomes:</p>
+<p><img alt="\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}" src="https://latex.codecogs.com/svg.latex?sap=%5Cfrac%7Bimportance%20*%20importanceFactor%7D%7Barea%20*%20areaFactor%7D" /></p>
+</div>
 </div>
 
 
@@ -83,6 +91,7 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation and Usage</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Algorithm Overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#map-interpretation">Map Interpretation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-calculation">Advanced Calculation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a></li>
