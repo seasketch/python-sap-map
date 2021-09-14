@@ -43,9 +43,9 @@ For this reason, Spatial Access Priority maps are frequently used as a `cost` la
 
 `sapmap` provided parameters for some advanced calculations.  Review the research literature for more detailed descriptions and use cases.  See the API docs for usage.
 
-`areaFactor` - By default the planning units are in meters, which can produce very small SAP values because the denominator is so large.  An areaFactor can be used to linearly scale the area to offset this.
+`areaFactor` - By default the planning units are in meters, which can produce very small SAP values because the denominator is so large.  An areaFactor can be used to linearly scale the area to offset this.  The default value is 1.
 
-`importanceFactor` - If a group of polygons should be given more or less importance than others, then an importanceFactor can be used.  The default values is 1.  For example if the polygons (together adding up to 100 importance) represent a person that uses an area only half of the year and its decided that their areas should therefor have half the importance, then a factor of 0.5 can be given.  Or if the polygons represent the areas and importance of 10 people responding together as group, where other responses only represent a single person, then an importanceFactor of 10 can be assigned.
+`importanceFactor` - If a group of polygons should be given more or less importance than others, then an importanceFactor can be used.  The default value is 1.  For example if the polygons (together adding up to 100 importance) represent a person that uses an area only half of the year and it is decided that their areas should therefore have half the importance, then a factor of 0.5 can be given.  Or if the polygons represent the areas and importance of 10 people responding together as group, where other responses only represent a single person, then an importanceFactor of 10 can be assigned.
 
 This more robust and flexible SAP calculation becomes:
 
