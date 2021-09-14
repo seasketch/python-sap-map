@@ -18,11 +18,11 @@ A Docker recipe is available to install `sapmap` in an isolated virtual environm
 
 Multiple example projects are included that can be run out of the box.
 
-[Simple](/examples/simple) - small geographic extent.  Very simple test dataset with polygons that aligned to 100m boundaries for ease of interpreting the result.  Produces raster with 100m cell size.
+`Simple` - small geographic extent.  Very simple test dataset with polygons that aligned to 100m boundaries for ease of interpreting the result.  Produces raster with 100m cell size.
 
-[Maldives](/examples/maldives) - medium geographic extent.  Produces raster with 100m cell size.
+`Maldives` - medium geographic extent.  Produces raster with 100m cell size.
 
-[Canada](/examples/canada) - large geographic extent. Demonstrates pushing the limits of raster file size and memory usage.  Produces raster with 400m cell size.
+`Canada` - large geographic extent. Demonstrates pushing the limits of raster file size and memory usage.  Produces raster with 400m cell size.
 
 ### Run the Simple project
 
