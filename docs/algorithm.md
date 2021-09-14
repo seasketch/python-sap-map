@@ -39,3 +39,15 @@ Notice that the polygon that had an importance of 10 and a SAP value of .016, re
 The magnitude of a pixels value by itself (e.g. `.016`)  is not important.  The real value is in being able to compare one pixel to another, or one group of pixels to another group of pixels.  A higher value means more importance to the group.  And the loss of access to a geographic area with more value will have a greater `cost` to the group.
 
 For this reason, Spatial Access Priority maps are frequently used as a `cost` layer in prioritization software such as [Marxan](https://marxansolutions.org/) or [PrioritizR](https://prioritizr.net/), to find spatial planning solutions that maximize for certain factors such as ecological abundance or resilience, while minimizing the cost to groups of people that use the area.
+
+## Advanced Calculation
+
+`sapmap` provided parameters for some advanced calculations.  Review the research literature for more detailed descriptions and use cases.  See the API docs for usage.
+
+`areaFactor` - By default the planning units are in meters, which can produce very small SAP values because the denominator is so large.  An areaFactor can be used to linearly scale the area to offset this.
+
+`importanceFactor` - If a group of polygons should be given more or less importance than others, then an importanceFactor can be used.  The default values is 1.  For example if the polygons (together adding up to 100 importance) represent a person that uses an area only half of the year and its decided that their areas should therefor have half the importance, then a factor of 0.5 can be given.  Or if the polygons represent the areas and importance of 10 people responding together as group, where other responses only represent a single person, then an importanceFactor of 10 can be assigned.
+
+This more robust and flexible SAP calculation becomes:
+
+![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?sap=%5Cfrac%7Bimportance%20*%20importanceFactor%7D%7Barea%20*%20areaFactor%7D) 
