@@ -39,9 +39,7 @@
 <p>Each person has a total value of 100 that they distribute over those areas.</p>
 <p><img alt="example polygon with importance" src="_images/survey-polygon-importance.png" /></p>
 <p><code class="docutils literal notranslate"><span class="pre">sapmap</span></code> then calculates a Spatial Access Priority value for each polygon:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SAP</span> <span class="n">value</span> <span class="o">=</span> <span class="n">importance</span> <span class="o">/</span> <span class="n">area</span>
-</pre></div>
-</div>
+<p><img alt="\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}" src="https://latex.codecogs.com/svg.latex?SAP=%5Cfrac%7Bimportance%7D%7Barea%7D" /></p>
 <p>In this example, the polygon with an importance of 10 is 25 square meters per side or 625 square meters in area.  It’s SAP value is calculated as:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span> <span class="o">/</span> <span class="mi">625</span> <span class="n">square</span> <span class="n">meters</span> <span class="o">=</span> <span class="o">.</span><span class="mi">016</span> <span class="o">/</span> <span class="n">square</span> <span class="n">meters</span>
 </pre></div>
@@ -65,7 +63,7 @@
 <p><code class="docutils literal notranslate"><span class="pre">areaFactor</span></code> - By default the planning units are in meters, which can produce very small SAP values because the denominator is so large.  An areaFactor can be used to linearly scale the area to offset this.</p>
 <p><code class="docutils literal notranslate"><span class="pre">importanceFactor</span></code> - If a group of polygons should be given more or less importance than others, then an importanceFactor can be used.  The default values is 1.  For example if the polygons (together adding up to 100 importance) represent a person that uses an area only half of the year and its decided that their areas should therefor have half the importance, then a factor of 0.5 can be given.  Or if the polygons represent the areas and importance of 10 people responding together as group, where other responses only represent a single person, then an importanceFactor of 10 can be assigned.</p>
 <p>This more robust and flexible SAP calculation becomes:</p>
-<p><img alt="\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}" src="https://latex.codecogs.com/svg.latex?sap=%5Cfrac%7Bimportance%20*%20importanceFactor%7D%7Barea%20*%20areaFactor%7D" /></p>
+<p><img alt="\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}" src="https://latex.codecogs.com/svg.latex?SAP=%5Cfrac%7Bimportance%20*%20importanceFactor%7D%7Barea%20*%20areaFactor%7D" /></p>
 </div>
 </div>
 
