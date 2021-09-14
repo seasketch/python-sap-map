@@ -18,7 +18,7 @@ In this example, the polygon with an importance of 10 is 25 square meters per si
 10 / 625 square meters = .016 / square meters
 ```
 
-This can be read as `.016 per square meter`
+This can be read as `.016 per square meter`.  In other words, the value or importance is spread over the area equally.
 
 ![survey sap map](img/survey-polygon-sap.png)
 
@@ -38,4 +38,4 @@ Notice that the polygon that had an importance of 10 and a SAP value of .016, re
 
 The magnitude of a pixels value by itself (e.g. `.016`)  is not important.  The real value is in being able to compare one pixel to another, or one group of pixels to another group of pixels.  A higher value means more importance to the group.  And the loss of access to a geographic area with more value will have a greater `cost` to the group.
 
-For this reason, Spatial Access Priority maps are frequently used as a `cost` layer in prioritization software such as [Marxan](https://marxansolutions.org/) or [PrioritizR](https://prioritizr.net/), to find spatial planning solutions that maximize for certain factors such ecological abundance or resilience, while minimizing the cost to groups of people that use the area.
+For this reason, Spatial Access Priority maps are frequently used as a `cost` layer in prioritization software such as [Marxan](https://marxansolutions.org/) or [PrioritizR](https://prioritizr.net/), to find spatial planning solutions that maximize for certain factors such as ecological abundance or resilience, while minimizing the cost to groups of people that use the area.
