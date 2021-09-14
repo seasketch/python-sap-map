@@ -9,9 +9,8 @@ Each person has a total value of 100 that they distribute over those areas.
 ![example polygon with importance](img/survey-polygon-importance.png)
 
 `sapmap` then calculates a Spatial Access Priority value for each polygon:
-```
-SAP value = importance / area
-```
+
+![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?SAP=%5Cfrac%7Bimportance%7D%7Barea%7D) 
 
 In this example, the polygon with an importance of 10 is 25 square meters per side or 625 square meters in area.  It's SAP value is calculated as:
 ```
@@ -50,4 +49,4 @@ For this reason, Spatial Access Priority maps are frequently used as a `cost` la
 
 This more robust and flexible SAP calculation becomes:
 
-![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?sap=%5Cfrac%7Bimportance%20*%20importanceFactor%7D%7Barea%20*%20areaFactor%7D) 
+![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?SAP=%5Cfrac%7Bimportance%20*%20importanceFactor%7D%7Barea%20*%20areaFactor%7D) 
