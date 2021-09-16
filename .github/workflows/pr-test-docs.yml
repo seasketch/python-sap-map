@@ -13,6 +13,6 @@ jobs:
         python -m pip install -r requirements_dev.txt
     - uses: ammaraskar/sphinx-action@master
       env:
-        PYTHONPATH: /home/runner/work/python-sap-map/python-sap-map/lib
+        PYTHONPATH: /home/runner/work/python-sap-map/python-sap-map/lib:/usr/local/lib/python3.8/site-packages
       with:
         docs-folder: "docs/"
