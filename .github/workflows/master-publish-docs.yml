@@ -23,8 +23,7 @@ jobs:
     - uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
-      env:
-        PYTHONPATH: '/work/lib'
+        build-command: "PYTHONPATH=/work/lib make html"
 
     - name: Commit worktree to gh-pages
       env:
