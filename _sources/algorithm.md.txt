@@ -21,7 +21,7 @@ This can be read as `.016 per square meter`.  In other words, the value or impor
 
 ![survey sap map](img/survey-polygon-sap.png)
 
-The polygons are then `rasterized` by overlaying them with a rectangular grid of pixels.  In this example, each grid pixel represents a distinct 25 meter x 25 meter geographic area.
+The polygons are then `rasterized`, by overlaying them with a rectangular grid of pixels and combining their values.  The discrete nature of polygons are traded for the ability to represent the importance of areas as a continuous field, sampled at the rate of once per grid pixel.  The smaller the grid pixels are, the more it retains the original accuracy of the polygons.  In this example, each grid pixel represents a 25 meter x 25 meter geographic area.
 
 ![survey sap map](img/survey-burn-in.png)
 

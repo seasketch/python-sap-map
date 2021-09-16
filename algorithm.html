@@ -46,7 +46,7 @@
 </div>
 <p>This can be read as <code class="docutils literal notranslate"><span class="pre">.016</span> <span class="pre">per</span> <span class="pre">square</span> <span class="pre">meter</span></code>.  In other words, the value or importance is spread over the area equally.</p>
 <p><img alt="survey sap map" src="_images/survey-polygon-sap.png" /></p>
-<p>The polygons are then <code class="docutils literal notranslate"><span class="pre">rasterized</span></code> by overlaying them with a rectangular grid of pixels.  In this example, each grid pixel represents a distinct 25 meter x 25 meter geographic area.</p>
+<p>The polygons are then <code class="docutils literal notranslate"><span class="pre">rasterized</span></code>, by overlaying them with a rectangular grid of pixels and combining their values.  The discrete nature of polygons are traded for the ability to represent the importance of areas as a continuous field, sampled at the rate of once per grid pixel.  The smaller the grid pixels are, the more it retains the original accuracy of the polygons.  In this example, each grid pixel represents a 25 meter x 25 meter geographic area.</p>
 <p><img alt="survey sap map" src="_images/survey-burn-in.png" /></p>
 <p>One-by-one, each rasterized polygon is <code class="docutils literal notranslate"><span class="pre">burned-in</span></code> to the grid, producing a <code class="docutils literal notranslate"><span class="pre">heatmap</span></code> or aggregate sum of SAP value.</p>
 <p><img alt="survey sap map" src="_images/survey-sap-heatmap.png" /></p>
