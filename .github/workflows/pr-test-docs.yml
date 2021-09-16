@@ -2,9 +2,6 @@ name: "Test Docs"
 on: 
 - pull_request
 
-env:
-  PYTHONPATH: '"$GITHUB_WORKSPACE"/lib'
-
 jobs:
   docs:
     runs-on: ubuntu-latest
@@ -20,4 +17,4 @@ jobs:
     - uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
-        build-command: "make html"
+        build-command: "PYTHONPATH=/home/runner/work/python-sap-map/python-sap-map/lib make html"
