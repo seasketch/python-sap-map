@@ -15,6 +15,7 @@ jobs:
       run: |
         python -m pip install -r requirements_dev.txt
     - uses: ammaraskar/sphinx-action@master
+      env:
+        PYTHONPATH: /home/runner/work/python-sap-map/python-sap-map/lib
       with:
         docs-folder: "docs/"
-        build-command: "PYTHONPATH=/home/runner/work/python-sap-map/python-sap-map/lib make html"
