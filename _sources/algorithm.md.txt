@@ -31,11 +31,13 @@ One-by-one, each rasterized polygon is `burned-in` to the grid, producing a `hea
 
 More specifically, for each pixel that a polygon overlaps with, the SAP value of the polygon is assigned to that pixel.  The accumulated SAP values for each pixel are summed to produce a final grid, which is output as a geospatial raster image file (GeoTIFF).
 
-Notice that the polygon that had an importance of 10 and a SAP value of .016, results in a pixel SAP value of .016.  This is because the polygon was exactly the size of a pixel (25 square meters).  The sum of all pixel values is 0.32, so this one pixel (and its geographic area) represents `(.016 / .32) = 5%` of the overall value or importance.
+Notice that the small polygon that had an importance of 10 and a SAP value of .016, results in a pixel SAP value of .016.  The sum of all pixel values in the image is 0.32, so this one pixel (and its geographic area) represents `(.016 / .32) = 5%` of the overall value or importance.
+
+On the far left side, you'll see that polygons with SAP values of .008 and .012 produce pixels with a SAP value of `.008 + .012 = .02` where they overlap.  These pixels have the highest overall importance as a result.
 
 ## Map Interpretation
 
-The magnitude of a pixels value by itself (e.g. `.016`)  is not important.  The real value is in being able to compare one pixel to another, or one group of pixels to another group of pixels.  A higher value means more importance to the group.  And the loss of access to a geographic area with more value will have a greater `cost` to the group.
+The magnitude of a pixels value by itself (e.g. `.02`)  is not important.  The real value is in being able to compare one pixel to another.  You can even compare the combined value of a group of pixels to another group of pixels.  A higher value means more importance to the group.  And the loss of access to a geographic area with more value will have a greater `cost` to the group.
 
 For this reason, Spatial Access Priority maps are frequently used as a `cost` layer in prioritization software such as [Marxan](https://marxansolutions.org/) or [PrioritizR](https://prioritizr.net/), to find spatial planning solutions that maximize for certain factors such as ecological abundance or resilience, while minimizing the cost to groups of people that use the area.
 
