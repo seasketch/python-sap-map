@@ -23,7 +23,7 @@ def genSapMap(
   outResolution=1000,
   bounds=None,
   boundsPrecision=0,
-  allTouched=False,
+  allTouched=True,
   fixGeom=False,
   maxArea=None,
   maxSap=None,
