@@ -53,7 +53,13 @@ def genSapMap(
     Manifest of run
   """
   startTime = time.perf_counter()
+  
+  try:
   src_shapes = fiona.open(infile)
+  except (fiona.errors.DriverError):
+    print('infile not found, skipping: {0}'.format(infile))
+    return None
+  
   outCrs = CRS.from_string(outCrsString)
   error_shapes = []
 
