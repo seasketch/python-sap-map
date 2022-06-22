@@ -4,6 +4,7 @@ from sapmap import genSapMap
 import os.path
 import sys
 import json
+import tracemalloc
 
 usage = "Usage: gen_sap_map path/to/config.json"
 
@@ -19,5 +20,10 @@ config = json.load(f)
 default = config['default'] if 'default' in config else {}
 runs = config['runs'] if 'runs' in config else [config]
 
+tracemalloc.start()
+
 for run in runs:
   genSapMap(**{**default, **run})
+
+print('Peak memory usage: {0} MB'.format(tracemalloc.get_traced_memory()[1]/1000000))
+tracemalloc.stop()
