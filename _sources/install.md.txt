@@ -7,10 +7,28 @@ A Docker recipe is available to install `sapmap` in an isolated virtual environm
 2. Clone the code, build a docker image, run a container with the image and open a shell to it, run final sap setup, then run the test suite to verify it's working:
 ```bash
     git clone https://github.com/seasketch/python-sap-map.git
+```
+
+3. Build docker image (only need to run once)
+```bash
     cd python-sap-map
     docker-compose build sapmap
+```
+
+4. Start the container.
+```bash
     docker-compose run --rm --service-ports sapmap
-    setup_sap_map
+```
+With this basic start command, the container only has access to the python-sap-map folder so any input/output will need to be maintained within it.
+
+1. Alternatively, start container with external folder mounts for input and output
+```bash
+docker-compose run --rm --service-ports -v /absolute/path/to/input:/work/input -v /absolute/path/to/output:/work/output  sapmap
+```
+With these volume mounts, config.json files can load shapes via `infile: '/work/input/my_shapes.shp`.  And `outpath: /work/output` can be used to write heatmaps back out of the container.
+
+6. Optionally, verify everything installed correctly.
+```bash
     pytest
 ```
 
