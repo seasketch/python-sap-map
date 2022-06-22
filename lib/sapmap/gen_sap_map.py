@@ -1,5 +1,5 @@
 import math
-
+import os
 from numpy import Infinity
 import rasterio
 from rasterio.features import bounds, rasterize
@@ -17,6 +17,7 @@ from sapmap.calc_sap import calcSap
 
 def genSapMap(
   infile,
+  outPath=None,
   importanceField=None,
   importanceFactorField=None,
   areaFactor=1,
@@ -36,6 +37,7 @@ def genSapMap(
 
   Arguments:
     infile: path+filename of vector dataset containing features, format must be supported by fiona/gdal
+    outpath: path to output heatmaps to.  Filename will be the same as the input, just with the .tif extension.  If not specified, heatmaps are output to the input folder
     importanceField: name of vector attribute containing importance value used for SAP calculation
     importanceFactorField: name of vector attribute containing importanceFactor value for importance
     areaFactor: factor to change the area by dividing. For example if area of geometry is calculated in square meters, an areaFactor of 1,000,000 will make the SAP per square km. because 1 sq. km = 1000m x 1000m = 1mil sq. meters 
@@ -59,7 +61,7 @@ def genSapMap(
   except (fiona.errors.DriverError):
     print('infile not found, skipping: {0}'.format(infile))
     return None
-  
+
   if len(src_shapes) < 1:
     print('infile contains no features, skipping: {0}'.format(infile))
     return None
@@ -68,7 +70,16 @@ def genSapMap(
   error_shapes = []
 
   # output files have the same name as infile
-  inBasename = infile.split('.')[0]
+  inpath, inFullFilename = os.path.split(infile)
+  inFilename = inFullFilename.split('.')[0]
+  # full path, minus extension
+  inBasename = ''
+
+  if outPath is None:
+    inBasename = os.path.join(inpath, inFilename)    
+  else:
+    inBasename = os.path.join(outPath, inFilename)
+
   outfile = "{}.tif".format(inBasename)
   outfileSmall = "{}_small.tif".format(inBasename)
   outfileLarge = "{}_large.tif".format(inBasename)
