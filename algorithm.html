@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +11,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -33,7 +34,7 @@
           <div class="body" role="main">
             
   <div class="section" id="algorithm-overview">
-<h1>Algorithm Overview<a class="headerlink" href="#algorithm-overview" title="Permalink to this headline">¶</a></h1>
+<h1>Algorithm Overview<a class="headerlink" href="#algorithm-overview" title="Permalink to this heading">¶</a></h1>
 <p>Assume two people draw areas important to them. Person one draws 2 polygons (in orange), and Person two draws 3 polygons (in green).</p>
 <p><img alt="example polygon" src="_images/survey-polygon.png" /></p>
 <p>Each person has a total value of 100 that they distribute over those areas.</p>
@@ -54,12 +55,12 @@
 <p>Notice that the small polygon that had an importance of 10 and a SAP value of .016, results in a pixel SAP value of .016.  The sum of all pixel values in the image is 0.32, so this one pixel (and its geographic area) represents <code class="docutils literal notranslate"><span class="pre">(.016</span> <span class="pre">/</span> <span class="pre">.32)</span> <span class="pre">=</span> <span class="pre">5%</span></code> of the overall value or importance.</p>
 <p>On the far left side, you’ll see that polygons with SAP values of .008 and .012 produce pixels with a SAP value of <code class="docutils literal notranslate"><span class="pre">.008</span> <span class="pre">+</span> <span class="pre">.012</span> <span class="pre">=</span> <span class="pre">.02</span></code> where they overlap.  These pixels have the highest overall importance as a result.</p>
 <div class="section" id="map-interpretation">
-<h2>Map Interpretation<a class="headerlink" href="#map-interpretation" title="Permalink to this headline">¶</a></h2>
+<h2>Map Interpretation<a class="headerlink" href="#map-interpretation" title="Permalink to this heading">¶</a></h2>
 <p>The magnitude of a pixels value by itself (e.g. <code class="docutils literal notranslate"><span class="pre">.02</span></code>)  is not important.  The real value is in being able to compare one pixel to another.  You can even compare the combined value of a group of pixels to another group of pixels.  A higher value means more importance to the group.  And the loss of access to a geographic area with more value will have a greater <code class="docutils literal notranslate"><span class="pre">cost</span></code> to the group.</p>
 <p>For this reason, Spatial Access Priority maps are frequently used as a <code class="docutils literal notranslate"><span class="pre">cost</span></code> layer in prioritization software such as <a class="reference external" href="https://marxansolutions.org/">Marxan</a> or <a class="reference external" href="https://prioritizr.net/">PrioritizR</a>, to find spatial planning solutions that maximize for certain factors such as ecological abundance or resilience, while minimizing the cost to groups of people that use the area.</p>
 </div>
 <div class="section" id="advanced-calculation">
-<h2>Advanced Calculation<a class="headerlink" href="#advanced-calculation" title="Permalink to this headline">¶</a></h2>
+<h2>Advanced Calculation<a class="headerlink" href="#advanced-calculation" title="Permalink to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">sapmap</span></code> provided parameters for some advanced calculations.  Review the research literature for more detailed descriptions and use cases.  See the API docs for usage.</p>
 <p><code class="docutils literal notranslate"><span class="pre">areaFactor</span></code> - By default the planning units are in meters, which can produce very small SAP values because the denominator is so large.  An areaFactor can be used to linearly scale the area to offset this.  The default value is 1.</p>
 <p><code class="docutils literal notranslate"><span class="pre">importanceFactor</span></code> - If a group of polygons should be given more or less importance than others, then an importanceFactor can be used.  The default value is 1.  For example if the polygons (together adding up to 100 importance) represent a person that uses an area only half of the year and it is decided that their areas should therefore have half the importance, then a factor of 0.5 can be given.  Or if the polygons represent the areas and importance of 10 people responding together as group, where other responses only represent a single person, then an importanceFactor of 10 can be assigned.</p>
@@ -116,7 +117,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -133,7 +134,7 @@
       &copy;2021, The Regents of the University of California.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +11,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -32,10 +33,10 @@
           <div class="body" role="main">
             
   <div class="section" id="contributing">
-<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading">¶</a></h1>
 <p>Contributions are welcome.  The docker workspace is setup for development out of the box.</p>
 <div class="section" id="debugging">
-<h2>Debugging<a class="headerlink" href="#debugging" title="Permalink to this headline">¶</a></h2>
+<h2>Debugging<a class="headerlink" href="#debugging" title="Permalink to this heading">¶</a></h2>
 <p>Once a workspace container is up, you can run a script using debugpy in your container and then connect with VSCode from the outside with its robust debugging tools.</p>
 <p>Start debupy in container listening on port, waits for vscode before executing the Python script.</p>
 <p>Running an example:</p>
@@ -99,7 +100,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -116,7 +117,7 @@
       &copy;2021, The Regents of the University of California.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
