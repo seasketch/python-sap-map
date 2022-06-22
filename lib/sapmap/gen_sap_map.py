@@ -60,6 +60,10 @@ def genSapMap(
     print('infile not found, skipping: {0}'.format(infile))
     return None
   
+  if len(src_shapes) < 1:
+    print('infile contains no features, skipping: {0}'.format(infile))
+    return None
+  
   outCrs = CRS.from_string(outCrsString)
   error_shapes = []
 
