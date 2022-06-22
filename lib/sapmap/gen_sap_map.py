@@ -26,6 +26,7 @@ def genSapMap(
   bounds=None,
   boundsPrecision=0,
   allTouchedSmall=False,
+  allTouchedSmallFactor=1.25,
   fixGeom=False,
   maxArea=None,
   maxSap=None,
@@ -44,6 +45,7 @@ def genSapMap(
     bounds: bounds to use for output raster, as [w, s, e, n] in CRS of infile.  Output raster will align to the top left, but will extend past the bottom right as needed to the next multiple of outResolution
     boundsPrecision: number of digits to round the coordinates of bound calculation to. useful if don't snap to numbers as expected
     allTouchedSmall: (boolean) use allTouched rasterize option for shapes with smaller shape index than a raster cell (area/perimeter length).  Ensures small and narrow shapes are not lost and every shape contributes heat to at least one pixel in result. Larger shapes are still picked up using Bresenham’s line algorithm because allTouched creates some seemingly invalid output (double counting) along shape boundaries. Using allTouched only for smallest shapes that need it mitigates this, but also uses additional memory, and will also carry more weight than shapes just above the index threshold.
+    allTouchedSmallFactor: (number) use to increase the shapeIndex threshold for identifying small shapes.  shapeIndex threshold is calculated as (shapeIndex of a raster cell * allTouchedSmallFactor).  Defaults to 1.25.  Increasing the factor will identify increasingly larger shapes as "small" and to be run with AllTouched option.  Useful when you have polygons that are mostly large but have small areas that are long and narrow and thus spotty in being picked up
     fixGeom: if an invalid geometry is found, if fixGeom is True it attempts to fix using buffer(0), otherwise it fails.  Review the log to make sure the automated fix was acceptable
     logToFile: (boolean) whether to output logs, errors, and manifest to file or stdout
 
@@ -115,6 +117,9 @@ def genSapMap(
 
   minShapeIndex = Infinity
   maxShapeIndex = 0
+  shapeIndexThreshold = Infinity
+  if allTouchedSmall:
+    shapeIndexThreshold = cellShapeIndex * allTouchedSmallFactor
 
   for idx, feature in enumerate(src_shapes):
       geometry = feature['geometry'] if src_shapes.crs['init'] == outCrsString else next(reprojectPolygon(feature))
@@ -164,7 +169,7 @@ def genSapMap(
           curShapeIndex = shapeGeom.area / shapeGeom.exterior.length
           minShapeIndex = min(minShapeIndex, curShapeIndex)
           maxShapeIndex = max(maxShapeIndex, curShapeIndex)
-        isSmall = allTouchedSmall and curShapeIndex < cellShapeIndex
+        isSmall = allTouchedSmall and curShapeIndex < shapeIndexThreshold
         if (isSmall):
           smallShapes.append((
             geometry,
@@ -287,12 +292,15 @@ def genSapMap(
   if allTouchedSmall:
     manifest['includedSmallCount'] = len(smallShapes)
     manifest['cellShapeIndex'] = cellShapeIndex
+    manifest['allTouchedSmallFactor'] = allTouchedSmallFactor
+    manifest['shapeIndexThreshold'] = shapeIndexThreshold
 
   print('Created SAP raster {} in {}s'.format(outfile, manifest['executionTime']))
 
   print(' {} features burned in'.format(manifest['includedCount']))
   if (allTouchedSmall):
-    print(' allTouchedSmall enabled, numSmallShapes: {1}, cellShapeIndex: {2}, minShapeIndex: {3}, maxShapeIndex: {4}'.format(len(shapes), len(smallShapes), cellShapeIndex, minShapeIndex, maxShapeIndex))
+    print(' allTouchedSmall enabled, numSmallShapes: {0}'.format(len(smallShapes)))
+    print('  cellShapeIndex: {0}, shapeIndexThreshold: {1} minShapeIndex: {2}, maxShapeIndex: {3}'.format(cellShapeIndex, shapeIndexThreshold, minShapeIndex, maxShapeIndex))
   if manifest['excludedCount'] > 0:
     print(' {} features excluded, see logfile for details'.format(manifest['excludedCount']))
   print('')
