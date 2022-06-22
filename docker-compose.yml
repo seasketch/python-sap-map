@@ -16,10 +16,4 @@ services:
     - ./:/work
     ports:
       - 5678:5678
-    command: ["bash"]
-    # deploy:
-    #   resources:
-    #     limits:
-    #       memory: 14000M
-    #     reservations:
-    #       memory: 14000M
+    command: bash -c "/work/scripts/setup_sap_map && exec bash"
