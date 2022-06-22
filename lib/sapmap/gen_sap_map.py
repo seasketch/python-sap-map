@@ -18,6 +18,7 @@ from sapmap.calc_sap import calcSap
 def genSapMap(
   infile,
   outPath=None,
+  overwrite=False,
   importanceField=None,
   importanceFactorField=None,
   areaFactor=1,
@@ -38,6 +39,7 @@ def genSapMap(
   Arguments:
     infile: path+filename of vector dataset containing features, format must be supported by fiona/gdal
     outpath: path to output heatmaps to.  Filename will be the same as the input, just with the .tif extension.  If not specified, heatmaps are output to the input folder
+    overwrite: whether to overwrite existing heatmap output, defaults to false and skips
     importanceField: name of vector attribute containing importance value used for SAP calculation
     importanceFactorField: name of vector attribute containing importanceFactor value for importance
     areaFactor: factor to change the area by dividing. For example if area of geometry is calculated in square meters, an areaFactor of 1,000,000 will make the SAP per square km. because 1 sq. km = 1000m x 1000m = 1mil sq. meters 
@@ -59,11 +61,11 @@ def genSapMap(
   try:
     src_shapes = fiona.open(infile)
   except (fiona.errors.DriverError):
-    print('infile not found, skipping: {0}'.format(infile))
+    print('Warning: infile not found, skipping {0}'.format(infile))
     return None
 
   if len(src_shapes) < 1:
-    print('infile contains no features, skipping: {0}'.format(infile))
+    print('Warning: infile contains no features, skipping {0}'.format(infile))
     return None
   
   outCrs = CRS.from_string(outCrsString)
@@ -86,6 +88,12 @@ def genSapMap(
   logfile = "{}.log.txt".format(inBasename) if logToFile else None
   manifestfile = "{}.manifest.json".format(inBasename) if logToFile else None
   errorfile = "{}.error.geojson".format(inBasename) if logToFile else None
+
+  if os.path.exists(outfile) and not overwrite:
+    print('Warning: outfile {0} already exists, skipping. Remove it and re-run or use overwrite option'.format(outfile))
+    return None
+  elif os.path.exists(outfile) and overwrite:
+    print('Overwriting {0} '.format(outfile))
 
   manifest = {
     'timestamp': datetime.datetime.now().astimezone().isoformat(),
