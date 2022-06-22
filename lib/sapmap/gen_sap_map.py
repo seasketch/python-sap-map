@@ -113,11 +113,14 @@ def genSapMap(
   cellTR = (minx + outResolution, miny + outResolution)
   cellTL = (minx, miny + outResolution)
   cellPoly = Polygon([cellBL, cellBR, cellTR, cellTL, cellBL])
+  # Based on https://gis.stackexchange.com/questions/316128/identifying-long-and-narrow-polygons-in-with-postgis
+  # In practice, the inverse method does not seem to work as well
   cellShapeIndex = cellPoly.area / cellPoly.length
 
   minShapeIndex = Infinity
   maxShapeIndex = 0
   shapeIndexThreshold = Infinity
+
   if allTouchedSmall:
     shapeIndexThreshold = cellShapeIndex * allTouchedSmallFactor
 
