@@ -55,7 +55,7 @@ def genSapMap(
   startTime = time.perf_counter()
   
   try:
-  src_shapes = fiona.open(infile)
+    src_shapes = fiona.open(infile)
   except (fiona.errors.DriverError):
     print('infile not found, skipping: {0}'.format(infile))
     return None
@@ -207,7 +207,7 @@ def genSapMap(
 
   smallResult = None
   if allTouchedSmall and len(smallShapes) > 0:
-    smallResult = rasterize(
+    result = rasterize(
         smallShapes,
         out_shape=(height, width),
         transform=outTransform,
@@ -215,28 +215,57 @@ def genSapMap(
         fill=0,
         all_touched=True
     )
+    # Debug - output small shape raster
+    # if result is not None:
+    #   with rasterio.open(
+    #     outfileLarge,
+    #     'w',
+    #     driver='GTiff',
+    #     height=height,
+    #     width=width,
+    #     count=1,
+    #     nodata=0,
+    #     dtype='float32',
+    #     crs=outCrs,
+    #     transform=outTransform
+    #   ) as out:
+    #     out.write(result, indexes=1)
 
   result = None
   if len(shapes) > 0:
-    result = rasterize(
+    if result is not None and result.size > 0:
+      result = result + rasterize(
         shapes,
         out_shape=(height, width),
         transform=outTransform,
         merge_alg=MergeAlg.add,
         fill=0,
         all_touched=False
-    )
-
-  finalResult = None
-  if allTouchedSmall:
-    if smallResult is not None and smallResult.size > 0 and result is not None and result.size > 0:
-      finalResult = result + smallResult
-    elif result is not None and result.size > 0:
-      finalResult = result
+      )
     else:
-      finalResult = smallResult
-  else:
-    finalResult = result
+      result = rasterize(
+        shapes,
+        out_shape=(height, width),
+        transform=outTransform,
+        merge_alg=MergeAlg.add,
+        fill=0,
+        all_touched=False
+      )
+      # Debug - output small shape raster
+      # if result is not None:
+      #   with rasterio.open(
+      #     outfileLarge,
+      #     'w',
+      #     driver='GTiff',
+      #     height=height,
+      #     width=width,
+      #     count=1,
+      #     nodata=0,
+      #     dtype='float32',
+      #     crs=outCrs,
+      #     transform=outTransform
+      #   ) as out:
+      #     out.write(result, indexes=1)
 
   if logfile:
     with open(logfile, 'w') as logFile:
@@ -248,38 +277,6 @@ def genSapMap(
         print(item)
       print('')
   print('')
-
-  # Debug - output small shape raster
-  # if smallResult is not None:
-  #   with rasterio.open(
-  #     outfileSmall,
-  #     'w',
-  #     driver='GTiff',
-  #     height=height,
-  #     width=width,
-  #     count=1,
-  #     nodata=0,
-  #     dtype='float32',
-  #     crs=outCrs,
-  #     transform=outTransform
-  #   ) as out:
-  #     out.write(smallResult, indexes=1)
-
-  # Debug - output large shape raster
-  # if result is not None:
-  #   with rasterio.open(
-  #     outfileLarge,
-  #     'w',
-  #     driver='GTiff',
-  #     height=height,
-  #     width=width,
-  #     count=1,
-  #     nodata=0,
-  #     dtype='float32',
-  #     crs=outCrs,
-  #     transform=outTransform
-  #   ) as out:
-  #     out.write(result, indexes=1)
 
   with rasterio.open(
     outfile,
@@ -293,7 +290,7 @@ def genSapMap(
     crs=outCrs,
     transform=outTransform
   ) as out:
-    out.write(finalResult, indexes=1)
+    out.write(result, indexes=1)
 
   manifest['includedCount'] = len(manifest['included'])
   manifest['excludedCount'] = len(manifest['excluded'])
