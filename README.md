@@ -1,6 +1,8 @@
 
 # sapmap
 
+[DEPRECATED] This has become a more general purpose heatmap tool and is maintained at https://github.com/seasketch/heatmap
+
 ![sapmap package](https://github.com/seasketch/python-sap-map/actions/workflows/test-sapmap.yml/badge.svg)
 
 `sapmap` takes the areas that a group identifies as important and combines them into a map of `spatial access priorities (SAP)`
