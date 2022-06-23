@@ -14,7 +14,7 @@ def test_outer_bounds():
     outfile = os.path.join(DATA, 'simple-polygon.tif')
 
     assert(os.path.isfile(infile))
-    manifest = genSapMap(infile, outResolution=resolution, bounds=[-400, -400, 400, 400], areaFactor=pixelArea)
+    manifest = genSapMap(infile, outResolution=resolution, bounds=[-400, -400, 400, 400], areaFactor=pixelArea, overwrite=True)
     assert(os.path.isfile(outfile))
     assert(len(manifest['included']) == 5)
 
@@ -57,7 +57,8 @@ def test_inner_bounds():
         infile,
         outResolution=resolution,
         bounds=[-100, -100, 100, 100],
-        areaFactor=pixelArea
+        areaFactor=pixelArea,
+        overwrite=True
     )
     assert(os.path.isfile(outfile))
     assert(len(manifest['included']) == 5)

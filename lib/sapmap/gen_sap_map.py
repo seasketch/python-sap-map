@@ -19,6 +19,7 @@ def genSapMap(
   infile,
   outPath=None,
   overwrite=False,
+  method='sap',
   importanceField=None,
   importanceFactorField=None,
   areaFactor=1,
@@ -40,6 +41,7 @@ def genSapMap(
     infile: path+filename of vector dataset containing features, format must be supported by fiona/gdal
     outpath: path to output heatmaps to.  Filename will be the same as the input, just with the .tif extension.  If not specified, heatmaps are output to the input folder
     overwrite: whether to overwrite existing heatmap output, defaults to false and skips
+    method: method for calculating value: count, area, sap. Defaults to area
     importanceField: name of vector attribute containing importance value used for SAP calculation
     importanceFactorField: name of vector attribute containing importanceFactor value for importance
     areaFactor: factor to change the area by dividing. For example if area of geometry is calculated in square meters, an areaFactor of 1,000,000 will make the SAP per square km. because 1 sq. km = 1000m x 1000m = 1mil sq. meters 
@@ -187,14 +189,18 @@ def genSapMap(
         error = "Geometry has no coordinates"
 
       if not error:
-        curSap = calcSap(
-            shapeGeom,
-            feature['properties'][importanceField] if importanceField else 1,
-            areaFactor,
-            feature['properties'][importanceFactorField] if importanceFactorField else 1,
-            maxArea,
-            maxSap
-          )
+        heatValue = 1 # count method
+        if method == 'area':
+          heatValue = 1 / shapeGeom.area
+        elif method == 'sap':
+          heatValue = calcSap(
+              shapeGeom,
+              feature['properties'][importanceField] if importanceField else 1,
+              areaFactor,
+              feature['properties'][importanceFactorField] if importanceFactorField else 1,
+              maxArea,
+              maxSap
+            )
 
         curShapeIndex = 0
         if allTouchedSmall:
@@ -205,12 +211,12 @@ def genSapMap(
         if (isSmall):
           smallShapes.append((
             geometry,
-            curSap
+            heatValue
           ))
         else:
           shapes.append((
             geometry,
-            curSap
+            heatValue
           ))
 
         if uniqueIdField:
@@ -228,7 +234,7 @@ def genSapMap(
         else:
           manifest['excluded'].append(idx)
 
-  smallResult = None
+  result = None
   if allTouchedSmall and len(smallShapes) > 0:
     result = rasterize(
         smallShapes,
@@ -254,7 +260,6 @@ def genSapMap(
     #   ) as out:
     #     out.write(result, indexes=1)
 
-  result = None
   if len(shapes) > 0:
     if result is not None and result.size > 0:
       result = result + rasterize(

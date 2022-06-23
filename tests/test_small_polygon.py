@@ -16,9 +16,10 @@ def test_small_polygon_lost():
         infile,
         outResolution=resolution,
         bounds=[-100, -100, 100, 100],
-        areaFactor=pixelArea
+        areaFactor=pixelArea,
+        overwrite=True
     )
-    assert(os.path.isfile(outfile))
+    # assert(os.path.isfile(outfile))
     assert(len(manifest['included']) == 1)
 
     with rasterio.open(outfile) as reader:
@@ -46,7 +47,8 @@ def test_small_polygon_found():
         outResolution=resolution,
         bounds=[-100, -100, 100, 100],
         areaFactor=pixelArea,
-        allTouchedSmall=True
+        allTouchedSmall=True,
+        overwrite=True
     )
     assert(os.path.isfile(outfile))
     assert(len(manifest['included']) == 1)

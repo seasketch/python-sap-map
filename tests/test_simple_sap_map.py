@@ -11,7 +11,7 @@ outfile = os.path.join(DATA, 'simple-polygon.tif')
 
 def test_simple_sap_map():
     assert(os.path.isfile(infile))
-    manifest = genSapMap(infile, outResolution=resolution, areaFactor=pixelArea)
+    manifest = genSapMap(infile, outResolution=resolution, areaFactor=pixelArea, overwrite=True)
     assert(os.path.isfile(outfile))
     assert(len(manifest['included']) == 5)
 
@@ -40,7 +40,7 @@ def test_importance_sap_map():
     """Includes importanceField
     """
     assert(os.path.isfile(infile))
-    manifest = genSapMap(infile, outResolution=resolution, areaFactor=pixelArea, importanceField='importance')
+    manifest = genSapMap(infile, outResolution=resolution, areaFactor=pixelArea, importanceField='importance', overwrite=True)
     assert(os.path.isfile(outfile))
     assert(len(manifest['included']) == 5)
 
