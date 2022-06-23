@@ -16,4 +16,4 @@ services:
     - ./:/work
     ports:
       - 5678:5678
-    command: bash -c "/work/scripts/setup_sap_map && exec bash"
+    command: bash -c "/work/scripts/setup_heatmap && exec bash"

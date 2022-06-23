@@ -46,7 +46,7 @@ Multiple example projects are included that can be run out of the box.
 
 ```
 cd examples/simple
-gen_sap_map config.json
+gen_heatmap config.json
 ```
 
 ## Run the Canada project
@@ -57,7 +57,7 @@ cd examples/canada
 
 ../../scripts/gen_random_shapes config.json canada-poly.geojson
 
-gen_sap_map config.json
+gen_heatmap config.json
 ```
 
 ## Creating a New Project

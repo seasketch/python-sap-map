@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from .gen_sap_map import genSapMap, calcSap
+from .gen_heatmap import genHeatMap, calcSap
 
 __all__ = [
-  'genSapMap',
+  'genHeatMap',
   'calcSap'
 ]

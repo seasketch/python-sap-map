@@ -1,4 +1,4 @@
-from sapmap import genSapMap
+from sapmap import genHeatMap
 import os.path
 import rasterio
 import numpy as np
@@ -12,7 +12,7 @@ def test_small_polygon_lost():
     outfile = os.path.join(DATA, 'off-center-polygon.tif')
 
     assert(os.path.isfile(infile))
-    manifest = genSapMap(
+    manifest = genHeatMap(
         infile,
         outResolution=resolution,
         bounds=[-100, -100, 100, 100],
@@ -42,7 +42,7 @@ def test_small_polygon_found():
     outfile = os.path.join(DATA, 'off-center-polygon.tif')
 
     assert(os.path.isfile(infile))
-    manifest = genSapMap(
+    manifest = genHeatMap(
         infile,
         outResolution=resolution,
         bounds=[-100, -100, 100, 100],

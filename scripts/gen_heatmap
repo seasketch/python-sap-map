@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-from sapmap import genSapMap
+from sapmap import genHeatMap
 import os.path
 import sys
 import json
 import tracemalloc
 
-usage = "Usage: gen_sap_map path/to/config.json"
+usage = "Usage: gen_heatmap path/to/config.json"
 
 # Load config
 configPath = sys.argv[1]
@@ -23,7 +23,7 @@ runs = config['runs'] if 'runs' in config else [config]
 tracemalloc.start()
 
 for run in runs:
-  genSapMap(**{**default, **run})
+  genHeatMap(**{**default, **run})
 
 print('Peak memory usage: {0} MB'.format(tracemalloc.get_traced_memory()[1]/1000000))
 tracemalloc.stop()

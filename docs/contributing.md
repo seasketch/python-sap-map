@@ -10,7 +10,7 @@ Start debupy in container listening on port, waits for vscode before executing t
 Running an example:
 ```
     cd examples/survey
-    python -m debugpy --listen 0.0.0.0:5678 --wait-for-client ../../scripts/gen_sap_map config.json
+    python -m debugpy --listen 0.0.0.0:5678 --wait-for-client ../../scripts/gen_heatmap config.json
     python -m debugpy --listen 0.0.0.0:5678 --wait-for-client simple_sap_map.py
 ```
 

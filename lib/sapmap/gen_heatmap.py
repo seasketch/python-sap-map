@@ -15,7 +15,7 @@ import datetime
 from sapmap.calc_raster_props import calcRasterProps
 from sapmap.calc_sap import calcSap
 
-def genSapMap(
+def genHeatMap(
   infile,
   outPath=None,
   overwrite=False,

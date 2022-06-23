@@ -1,4 +1,4 @@
-from sapmap import genSapMap
+from sapmap import genHeatMap
 import os.path
 import rasterio
 import numpy as np
@@ -11,7 +11,7 @@ outfile = os.path.join(DATA, 'simple-polygon.tif')
 
 def test_simple_sap_map():
     assert(os.path.isfile(infile))
-    manifest = genSapMap(infile, outResolution=resolution, areaFactor=pixelArea, overwrite=True)
+    manifest = genHeatMap(infile, outResolution=resolution, areaFactor=pixelArea, overwrite=True)
     assert(os.path.isfile(outfile))
     assert(len(manifest['included']) == 5)
 
@@ -40,7 +40,7 @@ def test_importance_sap_map():
     """Includes importanceField
     """
     assert(os.path.isfile(infile))
-    manifest = genSapMap(infile, outResolution=resolution, areaFactor=pixelArea, importanceField='importance', overwrite=True)
+    manifest = genHeatMap(infile, outResolution=resolution, areaFactor=pixelArea, importanceField='importance', overwrite=True)
     assert(os.path.isfile(outfile))
     assert(len(manifest['included']) == 5)
 
@@ -68,4 +68,4 @@ def test_importance_sap_map():
 # Used for debugging
 if __name__ == "__main__":
     test_simple_sap_map()
-    # test_importance_sap_map()
+    test_importance_sap_map()

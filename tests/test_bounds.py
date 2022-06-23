@@ -1,4 +1,4 @@
-from sapmap import genSapMap
+from sapmap import genHeatMap
 import os.path
 import rasterio
 import numpy as np
@@ -14,7 +14,7 @@ def test_outer_bounds():
     outfile = os.path.join(DATA, 'simple-polygon.tif')
 
     assert(os.path.isfile(infile))
-    manifest = genSapMap(infile, outResolution=resolution, bounds=[-400, -400, 400, 400], areaFactor=pixelArea, overwrite=True)
+    manifest = genHeatMap(infile, outResolution=resolution, bounds=[-400, -400, 400, 400], areaFactor=pixelArea, overwrite=True)
     assert(os.path.isfile(outfile))
     assert(len(manifest['included']) == 5)
 
@@ -53,7 +53,7 @@ def test_inner_bounds():
     outfile = os.path.join(DATA, 'simple-polygon.tif')
 
     assert(os.path.isfile(infile))
-    manifest = genSapMap(
+    manifest = genHeatMap(
         infile,
         outResolution=resolution,
         bounds=[-100, -100, 100, 100],
