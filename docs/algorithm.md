@@ -1,5 +1,13 @@
 # Algorithm Overview
 
+## Count
+
+Method: `count`
+
+## Spatial Access Priority (SAP) heatmap
+
+Method: `sap`
+
 Assume two people draw areas important to them. Person one draws 2 polygons (in orange), and Person two draws 3 polygons (in green).
 
 ![example polygon](img/survey-polygon.png)
@@ -8,7 +16,7 @@ Each person has a total value of 100 that they distribute over those areas.
 
 ![example polygon with importance](img/survey-polygon-importance.png)
 
-`sapmap` then calculates a Spatial Access Priority value for each polygon:
+The `sap` method then calculates a Spatial Access Priority value for each polygon:
 
 ![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?SAP=%5Cfrac%7Bimportance%7D%7Barea%7D) 
 
@@ -35,15 +43,15 @@ Notice that the small polygon that had an importance of 10 and a SAP value of .0
 
 On the far left side, you'll see that polygons with SAP values of .008 and .012 produce pixels with a SAP value of `.008 + .012 = .02` where they overlap.  These pixels have the highest overall importance as a result.
 
-## Map Interpretation
+### Map Interpretation
 
 The magnitude of a pixels value by itself (e.g. `.02`)  is not important.  The real value is in being able to compare one pixel to another.  You can even compare the combined value of a group of pixels to another group of pixels.  A higher value means more importance to the group.  And the loss of access to a geographic area with more value will have a greater `cost` to the group.
 
 For this reason, Spatial Access Priority maps are frequently used as a `cost` layer in prioritization software such as [Marxan](https://marxansolutions.org/) or [PrioritizR](https://prioritizr.net/), to find spatial planning solutions that maximize for certain factors such as ecological abundance or resilience, while minimizing the cost to groups of people that use the area.
 
-## Advanced Calculation
+### Advanced Calculation
 
-`sapmap` provided parameters for some advanced calculations.  Review the research literature for more detailed descriptions and use cases.  See the API docs for usage.
+Extra parameters are provided for some advanced calculations.  Review the research literature for more detailed descriptions and use cases.  See the API docs for usage.
 
 `areaFactor` - By default the planning units are in meters, which can produce very small SAP values because the denominator is so large.  An areaFactor can be used to linearly scale the area to offset this.  The default value is 1.
 

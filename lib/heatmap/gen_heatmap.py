@@ -12,8 +12,8 @@ import fiona
 import simplejson
 import time
 import datetime
-from sapmap.calc_raster_props import calcRasterProps
-from sapmap.calc_sap import calcSap
+from heatmap.calc_raster_props import calcRasterProps
+from heatmap.calc_sap import calcSap
 
 def genHeatMap(
   infile,

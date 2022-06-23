@@ -1,5 +1,5 @@
-sapmap module
+heatmap module
 =============
 
-.. automodule:: sapmap
+.. automodule:: heatmap
     :members:

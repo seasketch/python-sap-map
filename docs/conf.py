@@ -2,7 +2,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'sap-map'
+project = 'heatmap'
 copyright = '2021, The Regents of the University of California'
 author = 'Tim Welch'
 

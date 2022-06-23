@@ -11,7 +11,7 @@ def read(fname):
 
 def get_version():
     vfile = os.path.join(
-        os.path.dirname(__file__), "lib", "sapmap", "_version.py")
+        os.path.dirname(__file__), "lib", "heatmap", "_version.py")
     with open(vfile, "r") as vfh:
         vline = vfh.read()
     vregex = r"^__version__ = ['\"]([^'\"]*)['\"]"
@@ -34,7 +34,7 @@ class PyTest(TestCommand):
 
 
 setup(
-    name="sapmap",
+    name="heatmap",
     version=get_version(),
     author="Tim Welch",
     author_email="tim.j.welch@gmail.com",
@@ -43,7 +43,7 @@ setup(
     keywords="gis geospatial geographic raster vector zonal statistics",
     url="https://github.com/seasketch/python-sap-map",
     package_dir={'': 'lib'},
-    packages=['sapmap'],
+    packages=['heatmap'],
     long_description=read('README.md'),
     install_requires=read('requirements.txt').splitlines(),
     tests_require=read('requirements_dev.txt').splitlines(),

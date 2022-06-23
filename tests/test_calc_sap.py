@@ -1,4 +1,4 @@
-from sapmap import calcSap
+from heatmap import calcSap
 from shapely.geometry import shape
 import json
 

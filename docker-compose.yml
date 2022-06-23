@@ -1,10 +1,10 @@
-# Setup sapmap workspace container
+# Setup heatmap workspace container
 
 version: '3'
 services:
-  sapmap:
-    container_name: sapmap
-    image: seasketch/sapmap:1.0.0
+  heatmap:
+    container_name: heatmap
+    image: seasketch/heatmap:1.0.0
     build:
       context: .             # use dockerfile
       target: workspace

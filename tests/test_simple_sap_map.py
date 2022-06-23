@@ -1,4 +1,4 @@
-from sapmap import genHeatMap
+from heatmap import genHeatMap
 import os.path
 import rasterio
 import numpy as np

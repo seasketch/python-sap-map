@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from sapmap import genHeatMap
+from heatmap import genHeatMap
 import os.path
 import sys
 import json

@@ -1,6 +1,6 @@
 # Installation and Usage
 
-A Docker recipe is available to install `sapmap` in an isolated virtual environment on your local computer with all dependencies.  In the future, a published module may be made available.
+A Docker recipe is available to install `heatmap` in an isolated virtual environment on your local computer with all dependencies.  In the future, a published module may be made available.
 
 1. First install and start [Docker Desktop](https://www.docker.com/) on your local computer.  Windows, MacOS, Linux are all supported.
 
@@ -12,18 +12,18 @@ A Docker recipe is available to install `sapmap` in an isolated virtual environm
 3. Build docker image (only need to run once)
 ```bash
     cd python-sap-map
-    docker-compose build sapmap
+    docker-compose build heatmap
 ```
 
 4. Start the container.
 ```bash
-    docker-compose run --rm --service-ports sapmap
+    docker-compose run --rm --service-ports heatmap
 ```
 With this basic start command, the container only has access to the python-sap-map folder so any input/output will need to be maintained within it.
 
 1. Alternatively, start container with external folder mounts for input and output
 ```bash
-docker-compose run --rm --service-ports -v /absolute/path/to/input:/work/input -v /absolute/path/to/output:/work/output  sapmap
+docker-compose run --rm --service-ports -v /absolute/path/to/input:/work/input -v /absolute/path/to/output:/work/output  heatmap
 ```
 With these volume mounts, config.json files can load shapes via `infile: '/work/input/my_shapes.shp`.  And `outpath: /work/output` can be used to write heatmaps back out of the container.
 
@@ -102,21 +102,21 @@ Add user base binary directory to your PATH
 
 Windows Option 1: Docker
 
-Install and start Docker for Windows, then build and start a sapmap Docker image:
+Install and start Docker for Windows, then build and start a heatmap Docker image:
 
 ```
     git clone https://github.com/seasketch/python-sap-map.git
     cd python-sap-map
     docker-compose build debug # not necessary?
-    docker-compose run --rm --service-ports sapmap
+    docker-compose run --rm --service-ports heatmap
 ```
 
 Windows Option 2: Python virtual environment
 
 ```
     pip install virtualenv
-    virtualenv env-sapmap
-    source env-sapmap/Scripts/activate
+    virtualenv env-heatmap
+    source env-heatmap/Scripts/activate
     pip install --upgrade pip
 ```
 
